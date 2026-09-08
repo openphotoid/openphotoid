@@ -1,0 +1,44 @@
+[package]
+name = "frame-matting"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Segmentation-to-alpha matting pipeline for OpenPhotoId (MODNet/BiRefNet via frame-engine)"
+
+[features]
+default = ["inference", "ort-backend"]
+# Compiles the model runners (`modnet::Modnet`, `birefnet::BiRefNetLite`)
+# and their frame-engine sessions. Off for the browser build (frame-wasm),
+# which runs the ONNX graph via onnxruntime-web; everything else in this
+# crate — the Matte type, the refinement chain, the composites, and
+# modnet's pre/post-processing — compiles either way.
+inference = ["dep:frame-engine", "dep:ndarray"]
+ort-backend = ["inference", "frame-engine/ort-backend"]
+tract-backend = ["inference", "frame-engine/tract-backend"]
+coreml = ["inference", "frame-engine/coreml"]
+directml = ["inference", "frame-engine/directml"]
+
+[dependencies]
+frame-core.workspace = true
+frame-engine = { workspace = true, optional = true }
+ndarray = { workspace = true, optional = true }
+image.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+
+[[bin]]
+name = "matting-spike"
+path = "src/bin/matting_spike.rs"
+required-features = ["inference"]
+
+# Both of these drive a real model through a real session, so they only
+# exist when an inference backend is compiled in.
+[[test]]
+name = "modnet_regression"
+required-features = ["inference"]
+
+[[test]]
+name = "tract_backend_regression"
+required-features = ["inference"]

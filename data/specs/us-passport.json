@@ -1,0 +1,31 @@
+{
+  "id": "us-passport",
+  "country": "US",
+  "document": "passport",
+  "sources": [
+    "https://travel.state.gov/content/travel/en/passports/how-apply/photos.html"
+  ],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 50.8, "height_mm": 50.8, "dpi_default": 300 },
+  "digital": {
+    "width_px": 600,
+    "height_px": 600,
+    "min_kb": null,
+    "max_kb": 240,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.50,
+    "head_max_pct": 0.69,
+    "eye_min_from_bottom_pct": 0.56,
+    "eye_max_from_bottom_pct": 0.69,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "Head 1\"-1 3/8\" (25-35 mm); eyes 1 1/8\"-1 3/8\" (28-35 mm) from bottom; no glasses since Nov 2016."
+  }
+}

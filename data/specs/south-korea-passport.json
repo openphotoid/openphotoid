@@ -1,0 +1,29 @@
+{
+  "id": "south-korea-passport",
+  "country": "KR",
+  "document": "passport",
+  "sources": ["https://visafoto.com/kr-passport-online-photo"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 35.0, "height_mm": 45.0, "dpi_default": 300 },
+  "digital": {
+    "width_px": 413,
+    "height_px": 531,
+    "min_kb": 100,
+    "max_kb": 500,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.711,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "Head 32-36mm (excludes hair) of 45mm height. Ears visible recommended. Pure white only — Government24 checker rejects grey/cream cast."
+  }
+}

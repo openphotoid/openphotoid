@@ -1,0 +1,32 @@
+[package]
+name = "frame-compliance"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "ID-photo compliance engine for OpenPhotoId: country specs, auto-crop solver, validation"
+
+[features]
+default = ["inference"]
+# The library itself — specs, the crop solver, the validation checklist —
+# needs no inference engine at all; it takes already-detected faces as
+# input. This feature only pulls in what `crop-spike` uses to produce
+# those faces, and is off for the browser build (frame-wasm).
+inference = ["frame-face/inference", "dep:frame-engine", "dep:frame-matting"]
+
+[dependencies]
+frame-core.workspace = true
+frame-face.workspace = true
+image.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+frame-engine = { workspace = true, features = ["ort-backend"], optional = true }
+frame-matting = { workspace = true, optional = true }
+include_dir.workspace = true
+
+[[bin]]
+name = "crop-spike"
+path = "src/bin/crop_spike.rs"
+required-features = ["inference"]

@@ -1,0 +1,23 @@
+{
+  "id": "china-2inch",
+  "country": "CN",
+  "document": "id-card",
+  "sources": ["https://github.com/Zeyi-Lin/HivisionIDPhotos (size_list_EN.csv, Apache-2.0)"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 35.0, "height_mm": 53.0, "dpi_default": 300 },
+  "digital": null,
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.55,
+    "head_max_pct": 0.66,
+    "eye_min_from_bottom_pct": 0.45,
+    "eye_max_from_bottom_pct": 0.62,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "China's 'two inch' domestic ID/exam photo size (413x626px @ 300dpi per Hivision's Apache-2.0 size table, here in mm). Generic ICAO head/eye geometry."
+  }
+}

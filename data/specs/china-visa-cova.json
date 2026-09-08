@@ -1,0 +1,29 @@
+{
+  "id": "china-visa-cova",
+  "country": "CN",
+  "document": "visa-online",
+  "sources": ["https://www.snap2pass.com/doc/chinese-visa-photo"],
+  "last_verified": "2026-08-01",
+  "print": null,
+  "digital": {
+    "width_px": 390,
+    "height_px": 520,
+    "min_kb": 40,
+    "max_kb": 120,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.58,
+    "head_max_pct": 0.69,
+    "eye_min_from_bottom_pct": 0.45,
+    "eye_max_from_bottom_pct": 0.65,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "COVA online visa portal: width 354-420px x height 472-560px (using the midpoint 390x520 here since our schema takes one exact size); JPEG 40-120KB. Pure white background — grey/cream cast rejected by their checker."
+  }
+}

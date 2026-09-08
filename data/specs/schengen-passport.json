@@ -1,0 +1,31 @@
+{
+  "id": "schengen-passport",
+  "country": "EU",
+  "document": "passport",
+  "sources": [
+    "https://schengenvisainfo.com/photo/"
+  ],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 35.0, "height_mm": 45.0, "dpi_default": 300 },
+  "digital": {
+    "width_px": null,
+    "height_px": null,
+    "min_kb": null,
+    "max_kb": null,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "light-grey", "hex_render": "#DCDCDC" },
+  "face": {
+    "head_min_pct": 0.711,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.65,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "35x45 mm, head 32-36 mm (71-80%); Germany mandates light grey background."
+  }
+}

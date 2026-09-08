@@ -1,0 +1,102 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/frame-core",
+    "crates/frame-engine",
+    "crates/frame-matting",
+    "crates/frame-face",
+    "crates/frame-compliance",
+    "crates/frame-sheet",
+    "crates/frame-batch",
+    "crates/frame-license",
+    "crates/frame-retouch",
+    "crates/frame-wasm",
+    "apps/desktop/src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/openapps/openphotoid"
+
+[workspace.dependencies]
+# --- internal crates ---
+frame-core = { path = "crates/frame-core" }
+frame-engine = { path = "crates/frame-engine", default-features = false }
+# default-features off across the board: the `inference` feature (which
+# pulls in frame-engine and, through it, `ort`) is opt-in per consumer, so
+# that the browser build (frame-wasm) can take the same crates without the
+# native ONNX runtime that has no wasm32 target.
+frame-matting = { path = "crates/frame-matting", default-features = false }
+frame-face = { path = "crates/frame-face", default-features = false }
+frame-compliance = { path = "crates/frame-compliance", default-features = false }
+frame-sheet = { path = "crates/frame-sheet" }
+frame-retouch = { path = "crates/frame-retouch" }
+
+# --- imaging (MIT/Apache only — see docs/research/02-models-licenses.md §D) ---
+# Only the formats a photo tool receives. The default set also compiles an
+# AVIF *encoder* (ravif, with rayon), OpenEXR, QOI, TGA, DDS and more —
+# about a third of the browser build's wasm, for files nobody uploads as
+# a passport photo.
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "bmp", "gif", "tiff"] }
+fast_image_resize = "5"
+imageproc = "0.25"
+png = "0.17"
+exif = { package = "kamadak-exif", version = "0.6" }
+
+# --- inference: two backends behind frame-engine's EngineSession, selected
+# --- by feature (PLAN.md §3, §M9). ort is the desktop default (its
+# --- prebuilt onnxruntime binaries only cover Windows/macOS/Linux). tract
+# --- is pure-Rust, no native build step, used where ort has no prebuilt
+# --- binary (Android/iOS) — models need scripts/patch-modnet-for-tract.py-
+# --- style prep first; see MODELS.md for which ones are ready.
+ort = { version = "=2.0.0-rc.10", features = ["ndarray"] }
+tract-onnx = "=0.21.17"
+ndarray = "0.16"
+
+# --- model downloads (blocking; models fetched on first run, sha256-pinned) ---
+ureq = "2"
+sha2 = "0.10"
+hex = "0.4"
+dirs = "6"
+
+# --- misc ---
+thiserror = "2"
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tracing = "0.1"
+rayon = "1"
+# Embeds data/specs/*.json into the binary at compile time (MIT/Apache-2.0).
+# Needed because a packaged app has no filesystem access to the source
+# tree's data/specs/ dir the way `cargo run` on a dev machine does.
+include_dir = "0.7"
+ed25519-dalek = { version = "2", features = ["pkcs8"] }
+# --- browser build (apps/webapp) ---
+# Pinned exactly: wasm-bindgen and its CLI verify each other's version when
+# the bindings are generated and refuse to run when they differ, so a
+# floating requirement breaks the web build the first time either side
+# publishes. Bump this and CI's `cargo install wasm-bindgen-cli --version`
+# together.
+wasm-bindgen = "=0.2.126"
+console_error_panic_hook = "0.1"
+printpdf = "0.9"
+tempfile = "3"
+
+[profile.release]
+lto = "thin"
+strip = "symbols"
+
+# The browser build. Size is the constraint there — every byte is fetched
+# by a phone on first visit — so it trades a little speed for it: fat LTO
+# and one codegen unit let the linker drop everything the wasm exports
+# do not reach, and `panic = "abort"` removes the unwinding tables, which
+# wasm cannot use anyway (console_error_panic_hook still reports the
+# message). apps/webapp/scripts/build-wasm.sh selects it.
+[profile.wasm-release]
+inherits = "release"
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+panic = "abort"

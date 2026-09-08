@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  # Keep cargo's build cache off any network mount in self-hosted runners;
+  # a no-op on GitHub-hosted runners (see docs/research/05-m0-results.md
+  # for why this matters on this project's shared dev VM).
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target
+
+jobs:
+  lint:
+    name: fmt + clippy + deny
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - uses: EmbarkStudios/cargo-deny-action@v2
+
+  test:
+    name: test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Fast/default tests only — the real-inference tests (marked #[ignore])
+      # download 25-224MB models and are exercised separately in the
+      # `integration` job below, cached, only on pushes to main.
+      - run: cargo test --workspace --release
+
+  desktop-build:
+    name: desktop build (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+        working-directory: apps/desktop
+      - run: npm run build
+        working-directory: apps/desktop
+      - run: cargo build --release -p openphotoid-desktop
+
+  webapp-build:
+    name: web app build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Pinned to the version wasm-bindgen-cli must match: the CLI and the
+      # crate check each other's version at generation time and fail
+      # outright when they differ, so a floating install turns into a
+      # broken build the first time either side releases.
+      - name: Install wasm-bindgen-cli
+        run: cargo install wasm-bindgen-cli --version 0.2.126 --locked
+      - run: npm ci
+        working-directory: apps/webapp
+      # The full assembly: wasm build, checksummed model fetch, bundle,
+      # and the runtime-file checks in scripts/build.sh. Those checks are
+      # the point of running this in CI — a missing onnxruntime runtime or
+      # a duplicated one only shows up at runtime otherwise.
+      - run: npm run build
+        working-directory: apps/webapp
+
+  integration:
+    name: real-inference tests (models cached)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Cache downloaded ONNX models
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Application Support/OpenPhotoId/models
+          key: openphotoid-models-${{ hashFiles('crates/frame-engine/src/registry.rs') }}
+      # Runs every #[ignore]'d integration test across the workspace: the
+      # MODNet/YuNet regression tests, the end-to-end batch test, and the
+      # desktop pipeline round-trip test (docs/research/05-m0-results.md).
+      - run: cargo test --workspace --release -- --ignored

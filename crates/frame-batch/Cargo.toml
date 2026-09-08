@@ -1,0 +1,24 @@
+[package]
+name = "frame-batch"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Batch queue and parallel pipeline executor for OpenPhotoId"
+
+[dependencies]
+frame-core.workspace = true
+frame-engine = { workspace = true, features = ["ort-backend"] }
+frame-matting = { workspace = true, features = ["ort-backend"] }
+frame-face = { workspace = true, features = ["ort-backend"] }
+frame-compliance = { workspace = true, features = ["inference"] }
+rayon.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+anyhow.workspace = true
+tempfile.workspace = true
+
+[[bin]]
+name = "batch-spike"
+path = "src/bin/batch_spike.rs"

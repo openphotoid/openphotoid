@@ -1,0 +1,23 @@
+{
+  "id": "australia-passport",
+  "country": "AU",
+  "document": "passport",
+  "sources": ["https://www.passports.gov.au/help/passport-photos"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 35.0, "height_mm": 45.0, "dpi_default": 300 },
+  "digital": null,
+  "background": { "name": "light-grey", "hex_render": "#E0E0E0" },
+  "face": {
+    "head_min_pct": 0.711,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "Head 32-36mm of 45mm height. Background plain light grey or off-white (not pure white for in-person submission). Glasses banned since 2018. DFAT officially discourages third-party online photo services over identity-fraud concerns from uploading biometric photos."
+  }
+}

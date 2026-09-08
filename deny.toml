@@ -1,0 +1,66 @@
+# License policy: no GPL/AGPL/LGPL in-process (PLAN.md §4).
+# Model weights are policed separately via MODELS.md.
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "BSL-1.0",
+    "CC0-1.0",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Unicode-DFS-2016",
+    # OSI-approved/FSF-free permissive license on libfuzzer-sys (a fuzz-target
+    # dependency of rav1e/ravif, pulled in transitively via image's AVIF
+    # support — not code we call, but present in the dependency graph).
+    "NCSA",
+    # Data license on the Mozilla CA root-cert bundle crates (webpki-roots /
+    # webpki-root-certs, via ureq's TLS stack). Permissive, standard across
+    # the rustls/ureq ecosystem.
+    "CDLA-Permissive-2.0",
+]
+
+[bans]
+multiple-versions = "allow"
+
+[advisories]
+ignore = [
+    # All "unmaintained" (not exploit-level) advisories, transitively pulled
+    # in by Tauri 2 itself — none of this is openphotoid's own dependency
+    # choice, and Cargo.lock includes all platform targets (the GTK3
+    # bindings below are Linux-only WebKitGTK backend code that isn't even
+    # compiled on our macOS/Windows targets). Revisit as Tauri updates its
+    # own dependency tree upstream; do not add new ignores here without
+    # checking whether the real fix is an `image`/`ort`/`tauri` version bump.
+    #
+    # unic-ucd-ident / unic-ucd-version / unic-char-property / unic-char-range
+    # / unic-common: tauri-utils -> urlpattern -> unic-* (i18n ident tables).
+    "RUSTSEC-2025-0098",
+    "RUSTSEC-2025-0100",
+    "RUSTSEC-2025-0075", # unic-char-property
+    "RUSTSEC-2025-0080", # unic-char-range
+    "RUSTSEC-2025-0081", # unic-common
+    # paste / proc-macro-error: tauri macro-codegen dependencies.
+    "RUSTSEC-2024-0436", # paste
+    "RUSTSEC-2024-0370", # proc-macro-error
+    # gtk-rs GTK3 bindings: Tauri's Linux (WebKitGTK) backend only.
+    "RUSTSEC-2024-0411",
+    "RUSTSEC-2024-0412",
+    "RUSTSEC-2024-0413",
+    "RUSTSEC-2024-0414",
+    "RUSTSEC-2024-0415",
+    "RUSTSEC-2024-0416",
+    "RUSTSEC-2024-0417",
+    "RUSTSEC-2024-0418",
+    "RUSTSEC-2024-0419",
+    "RUSTSEC-2024-0420",
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

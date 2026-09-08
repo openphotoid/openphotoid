@@ -1,0 +1,23 @@
+{
+  "id": "japan-passport",
+  "country": "JP",
+  "document": "passport",
+  "sources": ["https://passlens.com/blog/japan-passport-photo-guide"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 35.0, "height_mm": 45.0, "dpi_default": 300 },
+  "digital": null,
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.667,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "Head 34+-2mm (32-36mm) of 45mm height; crown margin 4+-2mm from top. No shadow, no smile. Background may also be light grey or light blue per MOFA; white used as the default render."
+  }
+}

@@ -1,0 +1,16 @@
+[package]
+name = "frame-sheet"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Print-sheet layout (4x6/A4/5x7 tiling with cut marks) for OpenPhotoId"
+
+[dependencies]
+frame-core.workspace = true
+image.workspace = true
+anyhow.workspace = true
+
+[[bin]]
+name = "sheet-spike"
+path = "src/bin/sheet_spike.rs"

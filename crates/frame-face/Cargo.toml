@@ -1,0 +1,30 @@
+[package]
+name = "frame-face"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Face detection + landmarks for OpenPhotoId (YuNet via frame-engine)"
+
+[features]
+default = ["inference", "ort-backend"]
+# Compiles `YuNet` and its frame-engine session. Off for the browser build
+# (frame-wasm), which runs the ONNX graph via onnxruntime-web and calls
+# this crate's `preprocess`/`decode` around it — neither of which needs an
+# inference engine, and neither of which is duplicated in JavaScript.
+inference = ["dep:frame-engine", "dep:ndarray"]
+ort-backend = ["inference", "frame-engine/ort-backend"]
+tract-backend = ["inference", "frame-engine/tract-backend"]
+
+[dependencies]
+frame-core.workspace = true
+frame-engine = { workspace = true, optional = true }
+ndarray = { workspace = true, optional = true }
+thiserror.workspace = true
+
+[dev-dependencies]
+anyhow.workspace = true
+
+[[test]]
+name = "tract_backend_regression"
+required-features = ["inference"]

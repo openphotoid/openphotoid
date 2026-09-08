@@ -1,0 +1,22 @@
+/target
+node_modules/
+apps/desktop/dist/
+apps/desktop/src-tauri/gen/
+.DS_Store
+/dist
+
+# Web build (apps/webapp)
+apps/webapp/dist/
+apps/webapp/src/wasm/
+# Vendored ONNX weights, fetched + checksummed by
+# apps/webapp/scripts/fetch-models.sh
+.vendor/
+
+# Playwright
+apps/webapp/test-results/
+apps/webapp/playwright-report/
+
+# Never public
+.claude/
+*.log
+.DS_Store

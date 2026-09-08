@@ -1,0 +1,29 @@
+{
+  "id": "india-oci",
+  "country": "IN",
+  "document": "oci",
+  "sources": ["https://visafoto.com/in-passport-oci-online-photo"],
+  "last_verified": "2026-08-01",
+  "print": null,
+  "digital": {
+    "width_px": 900,
+    "height_px": 900,
+    "min_kb": null,
+    "max_kb": 200,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.70,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "OCI portal accepts 200x200 to 900x900px square; we target the max (900x900) for best quality. Generic ICAO head/eye geometry (portal does not publish exact bands)."
+  }
+}

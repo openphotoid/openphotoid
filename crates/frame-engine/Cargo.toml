@@ -1,0 +1,33 @@
+[package]
+name = "frame-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "ONNX inference engine for OpenPhotoId: ort sessions, model registry, download-on-first-run"
+
+[features]
+default = ["ort-backend"]
+# Desktop backend: ort + its prebuilt onnxruntime binary (Windows/macOS/
+# Linux only — no Android/iOS binary exists, see PLAN.md §M9).
+ort-backend = ["dep:ort"]
+# Mobile backend: pure-Rust tract, no native build step. CPU only — models
+# must have concrete input shapes and tract-supported ops; not every model
+# in the registry is ready for this (MODELS.md tracks which are).
+tract-backend = ["dep:tract-onnx"]
+# Apple CoreML execution provider (macOS, ort-backend only). Fixed-shape
+# model exports only — dynamic shapes silently fall back to CPU (ORT #14212).
+coreml = ["ort/coreml"]
+# DirectML execution provider (Windows, any DX12 GPU; ort-backend only).
+directml = ["ort/directml"]
+
+[dependencies]
+ort = { workspace = true, optional = true }
+tract-onnx = { workspace = true, optional = true }
+ndarray.workspace = true
+ureq.workspace = true
+sha2.workspace = true
+hex.workspace = true
+dirs.workspace = true
+thiserror.workspace = true
+tracing.workspace = true

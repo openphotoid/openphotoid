@@ -1,0 +1,130 @@
+/* App-level layout on top of the shared OpenApps tokens.
+   Mobile-first throughout: the widest breakpoint here is a comfortable
+   reading column, not a desktop dashboard. The research is explicit that
+   this audience is on a phone. */
+
+body {
+  background: var(--bg-page);
+  /* Room for the iOS home indicator and Android gesture bar under the
+     sticky action bar in the studio. */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-8);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: color-mix(in srgb, var(--bg-page) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: var(--border-width) solid var(--border-hairline);
+}
+.topbar .brand {
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-heading);
+  color: var(--text-strong);
+  margin-right: auto;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+}
+.topbar .brand .of {
+  color: var(--text-faint);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+}
+.stack-lg {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.card {
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+.faint {
+  color: var(--text-faint);
+}
+.tiny {
+  font: var(--type-caption);
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+.mono {
+  font: var(--type-mono);
+  font-size: 0.8rem;
+}
+
+/* The free badge. It appears next to features other products gate, and it
+   is the whole positioning in one element — so it is quiet, not a shout:
+   a claim that looks like an ad reads as one. */
+.free-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
+  color: color-mix(in srgb, var(--green) 72%, var(--gray-950));
+  font-size: 0.72rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-pass {
+  color: color-mix(in srgb, var(--green) 78%, var(--gray-950));
+}
+.status-warn {
+  color: color-mix(in srgb, var(--orange) 82%, var(--gray-950));
+}
+.status-fail {
+  color: var(--red);
+}
+
+.checkerboard {
+  background-image:
+    linear-gradient(45deg, var(--bg-sunken) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--bg-sunken) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--bg-sunken) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--bg-sunken) 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

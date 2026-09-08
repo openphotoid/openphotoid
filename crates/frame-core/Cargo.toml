@@ -1,0 +1,17 @@
+[package]
+name = "frame-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Core image types and IO for OpenPhotoId: decode, EXIF orient, resize, export"
+
+[dependencies]
+image.workspace = true
+fast_image_resize.workspace = true
+png.workspace = true
+exif.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

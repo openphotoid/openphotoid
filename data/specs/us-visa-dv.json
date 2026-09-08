@@ -1,0 +1,29 @@
+{
+  "id": "us-visa-dv",
+  "country": "US",
+  "document": "dv-lottery",
+  "sources": ["https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/photos.html", "https://www.dvlottery.com/photo-requirements/"],
+  "last_verified": "2026-08-01",
+  "print": null,
+  "digital": {
+    "width_px": null,
+    "height_px": null,
+    "min_kb": null,
+    "max_kb": 240,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.50,
+    "head_max_pct": 0.69,
+    "eye_min_from_bottom_pct": 0.56,
+    "eye_max_from_bottom_pct": 0.69,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "600-1200px square, 24-bit sRGB JPEG, <=240KB. Same geometry as us-passport but digital-only submission (DS-160/DV lottery)."
+  }
+}

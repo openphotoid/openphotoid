@@ -1,0 +1,37 @@
+/* Only the faces this app actually renders, subset to the scripts it
+   renders them in (see scripts/subset-fonts.sh).
+   The shared token file declares all 28 Geist cuts as full OTFs, which
+   is right for a desktop app that ships them once and wrong for a page a
+   phone downloads: four weights of use were 660 KB of OTF. The same four
+   faces, Latin-only and WOFF2, are 68 KB. Geist has no CJK glyphs, so
+   the Simplified Chinese UI falls through to the system font either
+   way. */
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/Geist-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/Geist-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/Geist-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/GeistMono-Regular.woff2") format("woff2");
+}

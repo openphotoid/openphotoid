@@ -1,0 +1,29 @@
+{
+  "id": "saudi-evisa",
+  "country": "SA",
+  "document": "visa-online",
+  "sources": ["https://visa.visitsaudi.com/Home/PhotoSpecifications"],
+  "last_verified": "2026-08-01",
+  "print": null,
+  "digital": {
+    "width_px": 200,
+    "height_px": 200,
+    "min_kb": 5,
+    "max_kb": 100,
+    "formats": ["jpg", "png", "gif", "bmp"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.70,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "visitsaudi.com eVisa portal: exactly 200x200px, 5-100KB, unusually permissive on format (jpg/png/gif/bmp). ICAO generic head/eye geometry."
+  }
+}

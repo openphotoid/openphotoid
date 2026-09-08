@@ -1,0 +1,23 @@
+{
+  "id": "india-passport",
+  "country": "IN",
+  "document": "passport",
+  "sources": ["https://www.passportindia.gov.in/"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 51.0, "height_mm": 51.0, "dpi_default": 300 },
+  "digital": null,
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.49,
+    "head_max_pct": 0.686,
+    "eye_min_from_bottom_pct": 0.559,
+    "eye_max_from_bottom_pct": 0.686,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "Head 25-35mm, eyes 28.5-35mm from bottom, both of 51mm print height. Glasses banned since 2016."
+  }
+}

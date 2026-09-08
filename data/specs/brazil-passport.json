@@ -1,0 +1,23 @@
+{
+  "id": "brazil-passport",
+  "country": "BR",
+  "document": "passport",
+  "sources": ["docs/research/04-compliance-specs.md"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 50.0, "height_mm": 70.0, "dpi_default": 300 },
+  "digital": null,
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.443,
+    "head_max_pct": 0.514,
+    "eye_min_from_bottom_pct": 0.45,
+    "eye_max_from_bottom_pct": 0.65,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "Same 50x70mm physical size as Canada; ICAO 70-80% head guidance applied to the larger frame gives ~44-51% (matching Canada's proportions since the paper size and framing convention are shared)."
+  }
+}

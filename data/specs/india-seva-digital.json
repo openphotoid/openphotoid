@@ -1,0 +1,29 @@
+{
+  "id": "india-seva-digital",
+  "country": "IN",
+  "document": "passport",
+  "sources": ["https://www.photopass.ai/blog/how-to-upload-photo-passport-seva"],
+  "last_verified": "2026-08-01",
+  "print": null,
+  "digital": {
+    "width_px": 630,
+    "height_px": 810,
+    "min_kb": 10,
+    "max_kb": 250,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.80,
+    "head_max_pct": 0.85,
+    "eye_min_from_bottom_pct": 0.58,
+    "eye_max_from_bottom_pct": 0.72,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "forbidden",
+    "editing_forbidden": false,
+    "notes": "Passport Seva online-application portal upload, distinct from the physical 2x2in print (india-passport): exact 630x810px, face 80-85% of frame (tighter crop than most). Eye-line band is an engineering estimate scaled from the tighter head-coverage requirement, not an officially published figure."
+  }
+}

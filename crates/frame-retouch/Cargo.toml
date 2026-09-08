@@ -1,0 +1,13 @@
+[package]
+name = "frame-retouch"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Optional portrait finishing for OpenPhotoId: skin smoothing, print enhancement, background studio, garment templates"
+
+[dependencies]
+frame-core.workspace = true
+frame-face = { workspace = true }
+frame-matting = { workspace = true }
+image.workspace = true

@@ -1,0 +1,29 @@
+{
+  "id": "india-pan",
+  "country": "IN",
+  "document": "pan",
+  "sources": ["https://visafoto.com/in-pan-photo"],
+  "last_verified": "2026-08-01",
+  "print": { "width_mm": 25.0, "height_mm": 35.0, "dpi_default": 300 },
+  "digital": {
+    "width_px": null,
+    "height_px": null,
+    "min_kb": 20,
+    "max_kb": 50,
+    "formats": ["jpeg"]
+  },
+  "background": { "name": "white", "hex_render": "#FFFFFF" },
+  "face": {
+    "head_min_pct": 0.70,
+    "head_max_pct": 0.80,
+    "eye_min_from_bottom_pct": 0.50,
+    "eye_max_from_bottom_pct": 0.70,
+    "centering_tolerance_pct": 5.0,
+    "max_roll_deg": 5.0
+  },
+  "rules": {
+    "glasses": "discouraged",
+    "editing_forbidden": false,
+    "notes": "Source cites '3.5x2.5cm'; used here as portrait 25mm(w) x 35mm(h) matching the conventional PAN photo orientation and other Indian ID formats. >=200dpi, 20-50KB JPEG. Generic ICAO head/eye geometry."
+  }
+}

@@ -1,0 +1,32 @@
+[package]
+name = "openphotoid-desktop"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "OpenPhotoId desktop shell (Tauri 2 + Svelte)"
+
+[features]
+# Forwards frame-engine's macOS-only CoreML execution provider (off by
+# default so Windows/Linux builds of this same package aren't affected).
+# Build with: cargo build --release --features coreml (or
+# `npm run tauri build -- --features coreml`).
+coreml = ["frame-engine/coreml"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+serde.workspace = true
+serde_json.workspace = true
+frame-core.workspace = true
+frame-engine = { workspace = true, features = ["ort-backend"] }
+frame-matting = { workspace = true, features = ["ort-backend"] }
+frame-face = { workspace = true, features = ["ort-backend"] }
+frame-compliance = { workspace = true, features = ["inference"] }
+base64 = "0.22"

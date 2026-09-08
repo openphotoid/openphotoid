@@ -1,0 +1,10 @@
+[package]
+name = "frame-license"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Ed25519 offline license-key scaffold for OpenPhotoId (all features ship ungated)"
+
+[dependencies]
+ed25519-dalek.workspace = true
