@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { ref: "${{ inputs.version || github.ref_name }}" }
       - uses: dtolnay/rust-toolchain@stable
-        with: { targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android, wasm32-unknown-unknown }
+        with: { targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android, wasm32-unknown-unknown }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - uses: actions/setup-java@v4
@@ -34,14 +34,21 @@ jobs:
       - run: npm --prefix apps/webapp ci && npm --prefix apps/mobile ci
       - run: bash apps/webapp/scripts/fetch-models.sh
       - run: python3 scripts/patch-modnet-for-tract.py .vendor/models/modnet_photographic_portrait_matting.onnx .vendor/models/modnet_photographic_portrait_matting.tract.onnx
-      - run: npm --prefix apps/mobile run android:init
-        env: { NDK_HOME: "${{ env.ANDROID_HOME }}/ndk/27.0.12077973" }
+      # gen/android is committed (it carries the insets fix in MainActivity
+      # and the theme), so there is no init step: the build uses it as is.
       - run: npm --prefix apps/mobile run android:build
         env: { NDK_HOME: "${{ env.ANDROID_HOME }}/ndk/27.0.12077973" }
+      # Gradle leaves the release APK unsigned; a phone refuses to install
+      # that. Debug-sign it with a throwaway key so the RC installs. The
+      # Play upload key is a different, permanent key and is never in CI.
       - run: |
           mkdir -p dist
-          apk=$(find apps/mobile/src-tauri/gen/android -name "*.apk" | head -1)
-          cp "$apk" "dist/OpenPhotoId-${VERSION}.apk"
+          bt="$ANDROID_HOME/build-tools/35.0.0"
+          apk=$(find apps/mobile/src-tauri/gen/android -name "*-release-unsigned.apk" | head -1)
+          keytool -genkeypair -v -keystore debug.keystore -storepass android -keypass android -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000
+          "$bt/zipalign" -f -p 4 "$apk" aligned.apk
+          "$bt/apksigner" sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out "dist/OpenPhotoId-${VERSION}.apk" aligned.apk
+          "$bt/apksigner" verify "dist/OpenPhotoId-${VERSION}.apk"
           sha256sum "dist/OpenPhotoId-${VERSION}.apk" > "dist/OpenPhotoId-${VERSION}.apk.sha256"
       - uses: actions/upload-artifact@v4
         with: { name: android, path: dist/ }
@@ -59,7 +66,7 @@ jobs:
       - run: npm --prefix apps/webapp ci && npm --prefix apps/mobile ci
       - run: bash apps/webapp/scripts/fetch-models.sh
       - run: python3 scripts/patch-modnet-for-tract.py .vendor/models/modnet_photographic_portrait_matting.onnx .vendor/models/modnet_photographic_portrait_matting.tract.onnx
-      - run: npm --prefix apps/mobile run ios:init
+      # gen/apple is committed too; no init step.
       # Unsigned: no team, no provisioning. The archive is what a store
       # submission signs later; zipped as Payload/ it is an .ipa by structure.
       - run: |

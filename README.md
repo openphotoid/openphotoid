@@ -3,10 +3,11 @@
 **Use it now:** [app.openphotoid.com](https://app.openphotoid.com/) — the web
 app, on a phone, tablet or computer, nothing to install. Site and privacy
 policy at [openphotoid.com](https://openphotoid.com/). Desktop installers for
-macOS and Windows arrive with the first release candidate on the
-[releases page](https://github.com/openphotoid/openphotoid/releases); store
-apps for iPhone, iPad and Android are [in progress](docs/mobile.md) on the
-same engine.
+macOS and Windows, the Android APK and the iPhone/iPad build arrive with the
+first release candidate on the
+[releases page](https://github.com/openphotoid/openphotoid/releases). The
+phone apps run the same engine natively (`apps/mobile`, [status and
+plan](docs/mobile.md)); store listings come after the release candidate.
 
 Formerly OpenFrame; the web build shipped as OpenPassport until September 2026.
 

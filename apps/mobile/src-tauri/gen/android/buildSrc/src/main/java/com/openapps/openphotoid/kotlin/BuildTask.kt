@@ -48,7 +48,12 @@ open class BuildTask : DefaultTask() {
         val rootDirRel = rootDirRel ?: throw GradleException("rootDirRel cannot be null")
         val target = target ?: throw GradleException("target cannot be null")
         val release = release ?: throw GradleException("release cannot be null")
-        val args = listOf("/Users/dariuskohsg/Downloads/sharing_folder/openapps/openphotoid/apps/mobile/node_modules/@tauri-apps/cli/tauri.js", "android", "android-studio-script");
+        // The Tauri CLI as installed in apps/mobile/node_modules, found from
+        // the Tauri directory rather than by an absolute path or PATH lookup,
+        // so the same project builds here and in CI.
+        val tauriDir = File(project.projectDir, rootDirRel)
+        val tauriJs = File(tauriDir, "../node_modules/@tauri-apps/cli/tauri.js").canonicalPath
+        val args = listOf(tauriJs, "android", "android-studio-script");
 
         project.exec {
             workingDir(File(project.projectDir, rootDirRel))

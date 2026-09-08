@@ -156,6 +156,21 @@ how the following was established on 8 September 2026:
 No real device has been tested yet; the simulators run on the Mac's CPU,
 so their timings say nothing about a phone's.
 
+The same UI also ships as native apps (`apps/mobile`, Tauri 2), where the
+models run in Rust through `tract` instead of in the WebView — which is what
+makes iOS 17 work. The device test inside them, 8 September 2026:
+
+| App | Result |
+|---|---|
+| iPhone 17 Pro Max, iOS 26.5 (simulator) | native · tract · 10 threads, 3.2 s |
+| iPhone 15 Pro, iOS 17.0 (simulator) | native · tract · 10 threads, 3.2 s |
+| iPad Pro 11, iOS 17.0 and iPad Pro 11 M5, iOS 26.5 (simulators) | native · tract · 10 threads, 3.0 s |
+| Android 15 (emulator, arm64) | native · tract · 4 threads, 3.5 s |
+
+Captures in [`screenshots/native/`](screenshots/native/). `src/lib/platform.js`
+is the seam: under Tauri the pipeline calls go to the Rust commands, in a
+browser they go to onnxruntime-web and the wasm module.
+
 ## Testing
 
 ```sh
