@@ -11,6 +11,7 @@
   import Account from "./views/Account.svelte";
   import Diagnostics from "./views/Diagnostics.svelte";
   import { isSignInReturn, isConsumedSignInReturn } from "$lib/openapps.js";
+  import { isNative, openAccountInBrowser } from "$lib/platform.js";
 
   /*
     A hash router in twenty lines rather than a routing library. The app
@@ -60,6 +61,13 @@
   // once here rather than per view. This is also the wasm module's first
   // instantiation, which warms it before the user picks a photo.
   const specsPromise = loadSpecs();
+  // A phone app launched with `-diag` (from a simulator or adb) goes
+  // straight to the device test, so a build can be checked without a tap.
+  if (isNative) {
+    import("$lib/platform.js").then(({ nativeInfo }) => nativeInfo()).then((i) => {
+      if (i?.autorun_diagnostics) location.hash = "#/diagnostics/run";
+    }).catch(() => {});
+  }
   let specs = $state([]);
   let loadError = $state(null);
   specsPromise.then((s) => (specs = s)).catch((e) => (loadError = e));
@@ -90,7 +98,7 @@
   <button
     class="linkish account"
     class:on={route.name === "account"}
-    onclick={() => go("account")}
+    onclick={() => (isNative ? openAccountInBrowser() : go("account"))}
     aria-label={$t("nav.account")}
     title={$t("nav.account")}
   >

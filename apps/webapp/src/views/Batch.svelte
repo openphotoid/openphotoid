@@ -56,8 +56,8 @@
           const { report } = await photo.render(spec.id, options, {}, { enhance: $settings.sharpen });
           const win = sizeWindow(spec);
           const bytes = win
-            ? photo.outputJpegWithin(win.min ?? 0, win.max ?? 10_000)
-            : photo.outputJpeg(95);
+            ? await photo.outputJpegWithin(win.min ?? 0, win.max ?? 10_000)
+            : await photo.outputJpeg(95);
           results.push({
             name: file.name,
             url: objectUrl(bytes),

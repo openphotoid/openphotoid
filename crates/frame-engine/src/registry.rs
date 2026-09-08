@@ -30,6 +30,21 @@ pub const MODNET_PHOTOGRAPHIC: ModelSpec = ModelSpec {
     license: "Apache-2.0 (HivisionIDPhotos / MODNet)",
 };
 
+/// MODNet, the tract-compatible variant: the same Apache-2.0 weights with
+/// its nine `Resize` nodes rewritten to `half_pixel` (provably identical
+/// for this decoder) and the input fixed to 1×3×512×512, which is what
+/// `frame-matting` feeds it anyway. Produced by
+/// `scripts/patch-modnet-for-tract.py` from [`MODNET_PHOTOGRAPHIC`]; it is
+/// not downloaded, so `url` is the script and [`ensure_model`] only finds
+/// it. The phone apps ship it inside the bundle (PLAN.md §M9).
+pub const MODNET_TRACT: ModelSpec = ModelSpec {
+    id: "modnet-photographic-tract",
+    filename: "modnet_photographic_portrait_matting.tract.onnx",
+    url: "scripts/patch-modnet-for-tract.py",
+    sha256: Some("a09a06eebfbe75e3c7bf0241c4cc26b2709d55ae5193277c6812ce98b3a0447f"),
+    license: "Apache-2.0 (HivisionIDPhotos / MODNet), mechanically patched",
+};
+
 /// YuNet face detector, MIT (OpenCV Zoo). ~230 KB, 5 landmarks.
 /// media.githubusercontent resolves the git-lfs pointer to real bytes.
 pub const YUNET_2023MAR: ModelSpec = ModelSpec {
@@ -73,6 +88,18 @@ pub fn ensure_model(spec: &ModelSpec) -> Result<PathBuf> {
         return Ok(path);
     }
 
+    if !spec.url.starts_with("http") {
+        // A derived model, produced by a script rather than fetched.
+        return Err(EngineError::Download {
+            id: spec.id.to_string(),
+            msg: format!(
+                "{} is not in {} and is not downloadable: produce it with `{}`",
+                spec.filename,
+                dir.display(),
+                spec.url
+            ),
+        });
+    }
     tracing::info!(model = spec.id, url = spec.url, "downloading model");
     let part = dir.join(format!("{}.part", spec.filename));
     let resp = ureq::get(spec.url)

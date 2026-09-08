@@ -1,0 +1,19 @@
+[package]
+name = "frame-session"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "OpenPhotoId's pipeline as one session, inference left to the caller — shared by the browser build and the phone apps"
+
+[dependencies]
+frame-core.workspace = true
+frame-face.workspace = true
+frame-matting.workspace = true
+frame-compliance.workspace = true
+frame-sheet.workspace = true
+frame-retouch.workspace = true
+image.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true

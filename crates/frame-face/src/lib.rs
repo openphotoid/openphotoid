@@ -176,6 +176,15 @@ impl YuNet {
         Ok(YuNet { session })
     }
 
+    /// The raw forward pass: output names and tensors, for a caller that
+    /// does its own letterboxing through [`preprocess`] and decoding
+    /// through [`decode`] — the phone apps drive `frame-session` this way.
+    pub fn run_raw(&mut self, input: ArrayD<f32>) -> Result<(Vec<String>, Vec<ArrayD<f32>>)> {
+        let names = self.session.output_names();
+        let outputs = self.session.run_f32(input)?;
+        Ok((names, outputs))
+    }
+
     /// Detect faces, returned sorted by descending score.
     pub fn detect(&mut self, frame: &Frame) -> Result<Vec<Face>> {
         let (flat, scale) = preprocess(frame)?;

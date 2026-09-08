@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Capabilities for OpenPhotoId's window on a phone","local":true,"windows":["main"],"permissions":["core:default","dialog:default","fs:default","opener:default"]}}

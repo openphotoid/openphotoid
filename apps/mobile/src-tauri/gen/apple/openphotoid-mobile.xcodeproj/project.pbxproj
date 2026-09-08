@@ -1,0 +1,460 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E918F7F18A82C1EBD6BCE23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A0A1684C1B80F6DAEE7E068 /* LaunchScreen.storyboard */; };
+		27EFF9AF96F9CCD4434D5291 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F24D67A63FCB6E55BD7954 /* CoreGraphics.framework */; };
+		3916AEE629BF32EED6E03EF2 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 020F9D6DF3C1CCB6319F6469 /* main.mm */; };
+		6782CC24D2F53AEB31725194 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2999E45C61E22356406F86 /* MetalKit.framework */; };
+		83A33E11792CAEE769A16CF6 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427E90943330A20C0E884079 /* Metal.framework */; };
+		92D1BE9B3291EA7D8434FE8D /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D18CA87A7BED6ED47CCEDBC /* libapp.a */; };
+		C90387867C37B335F9821847 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BD99A2B055A4FC0381950E /* UIKit.framework */; };
+		CD2A6CA598FBB98409A180CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811E72F4F8093E0E83B70C7A /* Assets.xcassets */; };
+		D46D29EF21B0FE7C24141431 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BC0E945A3448892996A102A /* Security.framework */; };
+		E997CB9CD5EFB04A938C35D9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CE05EBB854E52F57298D79 /* QuartzCore.framework */; };
+		FA25E9FF8093494DFBB35C69 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF42826B57C8681641990E9 /* WebKit.framework */; };
+		FBD65EEA6B2721F1507F2007 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD78ACCE819C237C069F895 /* assets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		020F9D6DF3C1CCB6319F6469 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		3BC0E945A3448892996A102A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3D18CA87A7BED6ED47CCEDBC /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		3DD78ACCE819C237C069F895 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		427E90943330A20C0E884079 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		42BD99A2B055A4FC0381950E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		42F24D67A63FCB6E55BD7954 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4A0A1684C1B80F6DAEE7E068 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		72CE05EBB854E52F57298D79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		811E72F4F8093E0E83B70C7A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8C2999E45C61E22356406F86 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		9E87F199CF133D0EA795F2D1 /* openphotoid-mobile_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "openphotoid-mobile_iOS.entitlements"; sourceTree = "<group>"; };
+		B53A794392133B83AE002A65 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		C6FFF04BBFD6FCE3DCCFFF3F /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		CEF42826B57C8681641990E9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		DEFB6C4192C2730CAB1E656D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E5E5CA68A1A87E25F6C6552E /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		F11ED50F1873DBD690357ED7 /* openphotoid-mobile_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "openphotoid-mobile_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		442CC5C656E24112111435C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92D1BE9B3291EA7D8434FE8D /* libapp.a in Frameworks */,
+				27EFF9AF96F9CCD4434D5291 /* CoreGraphics.framework in Frameworks */,
+				83A33E11792CAEE769A16CF6 /* Metal.framework in Frameworks */,
+				6782CC24D2F53AEB31725194 /* MetalKit.framework in Frameworks */,
+				E997CB9CD5EFB04A938C35D9 /* QuartzCore.framework in Frameworks */,
+				D46D29EF21B0FE7C24141431 /* Security.framework in Frameworks */,
+				C90387867C37B335F9821847 /* UIKit.framework in Frameworks */,
+				FA25E9FF8093494DFBB35C69 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		005E80A3A7041BFF969D52D3 /* openphotoid-mobile_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				DEFB6C4192C2730CAB1E656D /* Info.plist */,
+				9E87F199CF133D0EA795F2D1 /* openphotoid-mobile_iOS.entitlements */,
+			);
+			path = "openphotoid-mobile_iOS";
+			sourceTree = "<group>";
+		};
+		0F084E43F9765EE35D892273 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				B53A794392133B83AE002A65 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		1C305BD4529665172FB39B34 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F11ED50F1873DBD690357ED7 /* openphotoid-mobile_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		399AFA211997C0D5F29C6B60 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3F252AD8DD216BF51F0457E6 /* openphotoid-mobile */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		3F252AD8DD216BF51F0457E6 /* openphotoid-mobile */ = {
+			isa = PBXGroup;
+			children = (
+				020F9D6DF3C1CCB6319F6469 /* main.mm */,
+				0F084E43F9765EE35D892273 /* bindings */,
+			);
+			path = "openphotoid-mobile";
+			sourceTree = "<group>";
+		};
+		4461897C4AF39DEE21CC1383 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				42F24D67A63FCB6E55BD7954 /* CoreGraphics.framework */,
+				3D18CA87A7BED6ED47CCEDBC /* libapp.a */,
+				427E90943330A20C0E884079 /* Metal.framework */,
+				8C2999E45C61E22356406F86 /* MetalKit.framework */,
+				72CE05EBB854E52F57298D79 /* QuartzCore.framework */,
+				3BC0E945A3448892996A102A /* Security.framework */,
+				42BD99A2B055A4FC0381950E /* UIKit.framework */,
+				CEF42826B57C8681641990E9 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6851A2B85A0B487A9DE9C388 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E5E5CA68A1A87E25F6C6552E /* lib.rs */,
+				C6FFF04BBFD6FCE3DCCFFF3F /* main.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		DFA5A0CE4BF13D62D3054191 = {
+			isa = PBXGroup;
+			children = (
+				3DD78ACCE819C237C069F895 /* assets */,
+				811E72F4F8093E0E83B70C7A /* Assets.xcassets */,
+				4A0A1684C1B80F6DAEE7E068 /* LaunchScreen.storyboard */,
+				F4D2C47229BA3AB81B63ED78 /* Externals */,
+				005E80A3A7041BFF969D52D3 /* openphotoid-mobile_iOS */,
+				399AFA211997C0D5F29C6B60 /* Sources */,
+				6851A2B85A0B487A9DE9C388 /* src */,
+				4461897C4AF39DEE21CC1383 /* Frameworks */,
+				1C305BD4529665172FB39B34 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F4D2C47229BA3AB81B63ED78 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7FD35B47B1BDFC0C2ECA7FB3 /* openphotoid-mobile_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 10E95950C6762E1F3AE1E4CF /* Build configuration list for PBXNativeTarget "openphotoid-mobile_iOS" */;
+			buildPhases = (
+				1A518B2ED52614D83E394544 /* Build Rust Code */,
+				2F8422F68D4FD5705B7CA401 /* Sources */,
+				46CD6B71D42FBD2C2EE6D00B /* Resources */,
+				442CC5C656E24112111435C7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "openphotoid-mobile_iOS";
+			packageProductDependencies = (
+			);
+			productName = "openphotoid-mobile_iOS";
+			productReference = F11ED50F1873DBD690357ED7 /* openphotoid-mobile_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4F2D584998D6670980F077B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 164A4E69E931E0F6738377FA /* Build configuration list for PBXProject "openphotoid-mobile" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DFA5A0CE4BF13D62D3054191;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1C305BD4529665172FB39B34 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7FD35B47B1BDFC0C2ECA7FB3 /* openphotoid-mobile_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		46CD6B71D42FBD2C2EE6D00B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD2A6CA598FBB98409A180CB /* Assets.xcassets in Resources */,
+				1E918F7F18A82C1EBD6BCE23 /* LaunchScreen.storyboard in Resources */,
+				FBD65EEA6B2721F1507F2007 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A518B2ED52614D83E394544 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "node \"/Users/dariuskohsg/Downloads/sharing_folder/openapps/openphotoid/apps/mobile/node_modules/@tauri-apps/cli/tauri.js\" ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F8422F68D4FD5705B7CA401 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3916AEE629BF32EED6E03EF2 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4346A1BF4B5890780F1A13AE /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		83B4B16C90A9FFC4BF701AE5 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "openphotoid-mobile_iOS/openphotoid-mobile_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "openphotoid-mobile_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.openapps.openphotoid;
+				PRODUCT_NAME = "OpenPhotoId";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		8995C473D4BAE0F269ED2F59 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "openphotoid-mobile_iOS/openphotoid-mobile_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "openphotoid-mobile_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.openapps.openphotoid;
+				PRODUCT_NAME = "OpenPhotoId";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		F7BA996B734B150CE3DD309C /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		10E95950C6762E1F3AE1E4CF /* Build configuration list for PBXNativeTarget "openphotoid-mobile_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8995C473D4BAE0F269ED2F59 /* debug */,
+				83B4B16C90A9FFC4BF701AE5 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		164A4E69E931E0F6738377FA /* Build configuration list for PBXProject "openphotoid-mobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4346A1BF4B5890780F1A13AE /* debug */,
+				F7BA996B734B150CE3DD309C /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F4F2D584998D6670980F077B /* Project object */;
+}
