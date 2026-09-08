@@ -67,15 +67,18 @@ jobs:
       - run: bash apps/webapp/scripts/fetch-models.sh
       - run: python3 scripts/patch-modnet-for-tract.py .vendor/models/modnet_photographic_portrait_matting.onnx .vendor/models/modnet_photographic_portrait_matting.tract.onnx
       # gen/apple is committed too; no init step.
-      # Unsigned: no team, no provisioning. The archive is what a store
+      # Unsigned: no team, no provisioning. `--no-sign --archive-only` is the
+      # CLI's own way to archive without a team (a bare xcodebuild cannot be
+      # used instead: the project's "Build Rust Code" phase talks back to
+      # the CLI over a socket). The .app inside the archive is what a store
       # submission signs later; zipped as Payload/ it is an .ipa by structure.
       - run: |
           cd apps/mobile
-          node_modules/.bin/tauri ios build --target aarch64 --export-method debugging || true
-          cd src-tauri/gen/apple
-          xcodebuild -project openphotoid-mobile.xcodeproj -scheme openphotoid-mobile_iOS -configuration release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-          mkdir -p Payload && cp -R build/Build/Products/release-iphoneos/*.app Payload/
+          node_modules/.bin/tauri ios build --target aarch64 --no-sign --archive-only
+          cd src-tauri/gen/apple/build
+          mkdir -p Payload && cp -R openphotoid-mobile_iOS.xcarchive/Products/Applications/OpenPhotoId.app Payload/
           mkdir -p "$GITHUB_WORKSPACE/dist" && zip -qr "$GITHUB_WORKSPACE/dist/OpenPhotoId-${VERSION}-unsigned.ipa" Payload
+          shasum -a 256 "$GITHUB_WORKSPACE/dist/OpenPhotoId-${VERSION}-unsigned.ipa" > "$GITHUB_WORKSPACE/dist/OpenPhotoId-${VERSION}-unsigned.ipa.sha256"
       - uses: actions/upload-artifact@v4
         with: { name: ios, path: dist/ }
   desktop:

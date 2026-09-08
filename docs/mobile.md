@@ -100,6 +100,8 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
 export NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973
 npm run android:build -- --target aarch64          # …/apk/universal/release/app-universal-release-unsigned.apk
+npm run ios:build -- --target aarch64 --no-sign --archive-only   # the device build, unsigned:
+#   gen/apple/build/openphotoid-mobile_iOS.xcarchive/Products/Applications/OpenPhotoId.app
 scripts/run-simulators.sh <ios-udid> emulator-5554 /tmp/captures
 ```
 

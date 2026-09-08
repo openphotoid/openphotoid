@@ -59,6 +59,16 @@ ignore = [
     "RUSTSEC-2024-0418",
     "RUSTSEC-2024-0419",
     "RUSTSEC-2024-0420",
+    # Vulnerabilities with no upgrade path from here (8 September 2026), in
+    # crates that never see untrusted input in this product:
+    # quick-xml 0.38 — pinned by plist 1.8 (tauri, tauri-utils); plist reads
+    # our own Info.plist and bundle metadata at build time, never a user file.
+    "RUSTSEC-2026-0194",
+    "RUSTSEC-2026-0195",
+    # time 0.3.41 — tract-linalg 0.21.17 requires time <0.3.42; the advisory
+    # is about parsing deeply nested format descriptions, which nothing here
+    # does (timestamps are formatted, not parsed). Drop when tract moves.
+    "RUSTSEC-2026-0009",
 ]
 
 [sources]
