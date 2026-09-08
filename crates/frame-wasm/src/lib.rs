@@ -36,7 +36,14 @@ impl YunetHeads {
     pub fn new() -> YunetHeads {
         YunetHeads::default()
     }
-    pub fn push(&mut self, stride: u32, cls: Vec<f32>, obj: Vec<f32>, bbox: Vec<f32>, kps: Vec<f32>) {
+    pub fn push(
+        &mut self,
+        stride: u32,
+        cls: Vec<f32>,
+        obj: Vec<f32>,
+        bbox: Vec<f32>,
+        kps: Vec<f32>,
+    ) {
         self.0.push(stride, cls, obj, bbox, kps)
     }
 }
@@ -47,7 +54,9 @@ pub struct Session(frame_session::Session);
 #[wasm_bindgen]
 impl Session {
     pub fn decode(bytes: &[u8]) -> Result<Session, JsError> {
-        frame_session::Session::decode(bytes).map(Session).map_err(js)
+        frame_session::Session::decode(bytes)
+            .map(Session)
+            .map_err(js)
     }
     #[wasm_bindgen(getter)]
     pub fn width(&self) -> u32 {
@@ -92,8 +101,17 @@ impl Session {
     pub fn prepare(&mut self, options_json: &str) -> Result<(), JsError> {
         self.0.prepare(options_json).map_err(js)
     }
-    pub fn solve(&mut self, spec_id: &str, head_pct: f32, eye_pct: f32, center_pct: f32, enhance_output: bool) -> Result<String, JsError> {
-        self.0.solve(spec_id, head_pct, eye_pct, center_pct, enhance_output).map_err(js)
+    pub fn solve(
+        &mut self,
+        spec_id: &str,
+        head_pct: f32,
+        eye_pct: f32,
+        center_pct: f32,
+        enhance_output: bool,
+    ) -> Result<String, JsError> {
+        self.0
+            .solve(spec_id, head_pct, eye_pct, center_pct, enhance_output)
+            .map_err(js)
     }
     pub fn output_face_input(&mut self) -> Result<Vec<f32>, JsError> {
         self.0.output_face_input().map_err(js)
@@ -110,8 +128,16 @@ impl Session {
     pub fn output_jpeg_within(&self, min_kb: u32, max_kb: u32) -> Result<Vec<u8>, JsError> {
         self.0.output_jpeg_within(min_kb, max_kb).map_err(js)
     }
-    pub fn sheet_jpeg(&self, sheet: &str, dpi: u32, cut_marks: bool, quality: u8) -> Result<Vec<u8>, JsError> {
-        self.0.sheet_jpeg(sheet, dpi, cut_marks, quality).map_err(js)
+    pub fn sheet_jpeg(
+        &self,
+        sheet: &str,
+        dpi: u32,
+        cut_marks: bool,
+        quality: u8,
+    ) -> Result<Vec<u8>, JsError> {
+        self.0
+            .sheet_jpeg(sheet, dpi, cut_marks, quality)
+            .map_err(js)
     }
     pub fn sheet_info(&self, sheet: &str) -> Result<String, JsError> {
         self.0.sheet_info(sheet).map_err(js)

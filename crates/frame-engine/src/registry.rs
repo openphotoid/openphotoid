@@ -101,7 +101,18 @@ pub fn ensure_model(spec: &ModelSpec) -> Result<PathBuf> {
         });
     }
     tracing::info!(model = spec.id, url = spec.url, "downloading model");
-    let part = dir.join(format!("{}.part", spec.filename));
+    // A private part file per caller: tests and batch workers load the
+    // same model from several threads at once, and a shared `.part` name
+    // made every rename after the first fail with NotFound.
+    let part = dir.join(format!(
+        "{}.{}.{}.part",
+        spec.filename,
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0)
+    ));
     let resp = ureq::get(spec.url)
         .timeout(std::time::Duration::from_secs(1800))
         .call()
@@ -143,6 +154,13 @@ pub fn ensure_model(spec: &ModelSpec) -> Result<PathBuf> {
             tracing::warn!(model = spec.id, sha256 = %got, "unpinned model checksum — pin this in registry.rs");
         }
     }
-    std::fs::rename(&part, &path)?;
+    if let Err(e) = std::fs::rename(&part, &path) {
+        // Another caller finished the same download first; theirs is
+        // byte-identical (the checksum passed), so use it.
+        let _ = std::fs::remove_file(&part);
+        if !path.exists() {
+            return Err(e.into());
+        }
+    }
     Ok(path)
 }

@@ -68,7 +68,7 @@ This confirms your toolchain is set up correctly before you touch the UI.
 
 ```sh
 cargo build --release
-cargo test --workspace --release
+cargo test --workspace --exclude openphotoid-mobile --release
 ```
 
 Expect this to take a few minutes on first build (compiling `ort`,
@@ -81,7 +81,7 @@ inference (not just synthetic fixtures), so they're slower and need
 network access the first time:
 
 ```sh
-cargo test --workspace --release -- --ignored
+cargo test --workspace --exclude openphotoid-mobile --release -- --ignored
 ```
 
 This downloads (once, cached under your platform's app-data dir —

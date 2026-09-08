@@ -13,8 +13,13 @@ env:
   CARGO_TARGET_DIR: ${{ github.workspace }}/target
 
 jobs:
+  # `--exclude openphotoid-mobile` everywhere a whole-workspace build runs:
+  # the phone crate turns on frame-engine's tract backend, and cargo's
+  # feature unification would then enable both backends at once, which
+  # frame-engine refuses at compile time. The phone crate is built for its
+  # real targets by release.yml and checked on its own below.
   lint:
-    name: fmt + clippy + deny
+    name: fmt + clippy
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +28,15 @@ jobs:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --check
-      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo clippy --workspace --exclude openphotoid-mobile --all-targets -- -D warnings
+      - run: cargo check -p openphotoid-mobile --release
+
+  deny:
+    name: cargo deny
+    # A container action; it only runs on Linux, and needs no build.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - uses: EmbarkStudios/cargo-deny-action@v2
 
   test:
@@ -31,7 +44,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+            exclude: --exclude openphotoid-mobile
+          # The desktop crate needs GTK and WebKitGTK to build on Linux and
+          # is built on macOS and Windows anyway; the engine crates are
+          # what the Linux run is for.
+          - os: ubuntu-latest
+            exclude: --exclude openphotoid-mobile --exclude openphotoid-desktop
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +60,7 @@ jobs:
       # Fast/default tests only — the real-inference tests (marked #[ignore])
       # download 25-224MB models and are exercised separately in the
       # `integration` job below, cached, only on pushes to main.
-      - run: cargo test --workspace --release
+      - run: cargo test --workspace ${{ matrix.exclude }} --release
 
   desktop-build:
     name: desktop build (${{ matrix.os }})
@@ -105,4 +125,5 @@ jobs:
       # Runs every #[ignore]'d integration test across the workspace: the
       # MODNet/YuNet regression tests, the end-to-end batch test, and the
       # desktop pipeline round-trip test (docs/research/05-m0-results.md).
-      - run: cargo test --workspace --release -- --ignored
+      - run: cargo test --workspace --exclude openphotoid-mobile --release -- --ignored
+        env: { RUST_BACKTRACE: 1 }

@@ -64,10 +64,12 @@ fn models_dir(app: &tauri::AppHandle) -> CmdResult<PathBuf> {
         .join("models");
     #[cfg(not(target_os = "android"))]
     {
-        return Ok(resources);
+        Ok(resources)
     }
     #[cfg(target_os = "android")]
-    materialise_assets(app, &resources)
+    {
+        materialise_assets(app, &resources)
+    }
 }
 
 /// Android only: copy the models out of the APK into the data directory.
@@ -104,10 +106,7 @@ fn materialise_assets(app: &tauri::AppHandle, resources: &std::path::Path) -> Cm
 }
 
 /// The two models, loaded once from the app bundle's resources.
-fn models<'a>(
-    app: &tauri::AppHandle,
-    guard: &'a mut Option<Models>,
-) -> CmdResult<&'a mut Models> {
+fn models<'a>(app: &tauri::AppHandle, guard: &'a mut Option<Models>) -> CmdResult<&'a mut Models> {
     if guard.is_none() {
         let dir = models_dir(app)?;
         // The registry would download on first run; a phone app ships them.
@@ -131,7 +130,10 @@ fn detect(face: &mut YuNet, input: Vec<f32>) -> CmdResult<YunetHeads> {
     let mut heads = YunetHeads::new();
     for stride in [8u32, 16, 32] {
         let get = |n: &str| -> CmdResult<Vec<f32>> {
-            let i = names.iter().position(|x| x == n).ok_or(format!("no output {n}"))?;
+            let i = names
+                .iter()
+                .position(|x| x == n)
+                .ok_or(format!("no output {n}"))?;
             Ok(outputs[i].iter().copied().collect())
         };
         heads.push(
@@ -174,10 +176,18 @@ fn session_open(
     let mut guard = state.models.lock().unwrap();
     let m = models(&app, &mut guard)?;
 
-    let heads = detect(&mut m.face, session.face_input().map_err(|e| e.to_string())?)?;
+    let heads = detect(
+        &mut m.face,
+        session.face_input().map_err(|e| e.to_string())?,
+    )?;
     let face_found = session.set_source_face(&heads).map_err(|e| e.to_string())?;
-    let map = matte(&mut m.matting, session.matte_input("modnet").map_err(|e| e.to_string())?)?;
-    session.set_matte(&map, "modnet").map_err(|e| e.to_string())?;
+    let map = matte(
+        &mut m.matting,
+        session.matte_input("modnet").map_err(|e| e.to_string())?,
+    )?;
+    session
+        .set_matte(&map, "modnet")
+        .map_err(|e| e.to_string())?;
     if quality && face_found {
         let detail = session.detail_input().map_err(|e| e.to_string())?;
         if !detail.is_empty() {
@@ -193,7 +203,13 @@ fn session_open(
         *n
     };
     state.sessions.lock().unwrap().insert(id, session);
-    Ok(Opened { id, width, height, face_found, source_jpeg })
+    Ok(Opened {
+        id,
+        width,
+        height,
+        face_found,
+        source_jpeg,
+    })
 }
 
 #[derive(Serialize)]
@@ -204,6 +220,7 @@ pub struct Rendered {
 }
 
 /// The cheap half: finishing, crop, re-detect on the output, validate.
+#[allow(clippy::too_many_arguments)] // one command per render; the arguments are the UI sliders
 #[tauri::command]
 fn session_render(
     app: tauri::AppHandle,
@@ -220,11 +237,20 @@ fn session_render(
     let s = sessions.get_mut(&id).ok_or("no such session")?;
     s.prepare(&options).map_err(|e| e.to_string())?;
     let solve = s
-        .solve(&spec_id, head.unwrap_or(f32::NAN), eye.unwrap_or(f32::NAN), center.unwrap_or(f32::NAN), enhance)
+        .solve(
+            &spec_id,
+            head.unwrap_or(f32::NAN),
+            eye.unwrap_or(f32::NAN),
+            center.unwrap_or(f32::NAN),
+            enhance,
+        )
         .map_err(|e| e.to_string())?;
     let mut guard = state.models.lock().unwrap();
     let m = models(&app, &mut guard)?;
-    let heads = detect(&mut m.face, s.output_face_input().map_err(|e| e.to_string())?)?;
+    let heads = detect(
+        &mut m.face,
+        s.output_face_input().map_err(|e| e.to_string())?,
+    )?;
     let report = s.validate_output(&heads).map_err(|e| e.to_string())?;
     Ok(Rendered {
         solve: serde_json::from_str(&solve).map_err(|e| e.to_string())?,
@@ -248,7 +274,9 @@ fn session_export(
     let s = sessions.get(&id).ok_or("no such session")?;
     let bytes = match kind.as_str() {
         "jpeg" => s.output_jpeg(a.unwrap_or(95.0) as u8),
-        "jpeg_within" => s.output_jpeg_within(a.unwrap_or(0.0) as u32, b.unwrap_or(10_000.0) as u32),
+        "jpeg_within" => {
+            s.output_jpeg_within(a.unwrap_or(0.0) as u32, b.unwrap_or(10_000.0) as u32)
+        }
         "png" => s.output_png(),
         "sheet" => s.sheet_jpeg(
             sheet.as_deref().unwrap_or("4x6"),
@@ -263,17 +291,27 @@ fn session_export(
 }
 
 #[tauri::command]
-fn session_sheet_info(state: tauri::State<'_, AppState>, id: u32, sheet: String) -> CmdResult<serde_json::Value> {
+fn session_sheet_info(
+    state: tauri::State<'_, AppState>,
+    id: u32,
+    sheet: String,
+) -> CmdResult<serde_json::Value> {
     let sessions = state.sessions.lock().unwrap();
     let s = sessions.get(&id).ok_or("no such session")?;
-    serde_json::from_str(&s.sheet_info(&sheet).map_err(|e| e.to_string())?).map_err(|e| e.to_string())
+    serde_json::from_str(&s.sheet_info(&sheet).map_err(|e| e.to_string())?)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn session_set_backdrop_image(state: tauri::State<'_, AppState>, id: u32, bytes: String) -> CmdResult<()> {
+fn session_set_backdrop_image(
+    state: tauri::State<'_, AppState>,
+    id: u32,
+    bytes: String,
+) -> CmdResult<()> {
     let mut sessions = state.sessions.lock().unwrap();
     let s = sessions.get_mut(&id).ok_or("no such session")?;
-    s.set_backdrop_image(&unb64(&bytes)?).map_err(|e| e.to_string())
+    s.set_backdrop_image(&unb64(&bytes)?)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
