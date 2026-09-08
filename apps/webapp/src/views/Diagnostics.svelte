@@ -58,6 +58,7 @@
       result = {
         provider,
         threads: globalThis.__openphotoid?.threads ?? 1,
+        notes: globalThis.__openphotoid?.notes ?? [],
         wall: Math.round(performance.now() - t0),
         timings,
         checks: report.checks,
@@ -106,6 +107,9 @@
           <dt>{$t("diag.provider")}</dt><dd class="mono">{result.provider}{result.provider === "cpu" ? ` · ${result.threads} thread${result.threads === 1 ? "" : "s"}` : ""}</dd>
           <dt>{$t("diag.source")}</dt><dd class="mono">{result.source}</dd>
           <dt>{$t("diag.total")}</dt><dd class="mono">{result.wall} ms</dd>
+          {#each result.notes as n, i (i)}
+            <dt class="tiny">note</dt><dd class="tiny">{n}</dd>
+          {/each}
           {#each Object.entries(result.timings) as [k, v] (k)}
             <dt class="tiny">{k}</dt><dd class="mono tiny">{v} ms</dd>
           {/each}

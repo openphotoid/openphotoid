@@ -13,7 +13,7 @@
  * — they are the same list.
  */
 
-import { createSession } from "./ort.js";
+import { createSession, notes as sessionNotes } from "./ort.js";
 import { fetchModel } from "./models.js";
 
 /**
@@ -61,7 +61,7 @@ export async function loadModels(onProgress) {
     mattingModel = await createSession(bytes);
   }
   // Which provider ran, readable from the console and by the e2e suite.
-  globalThis.__openphotoid = { provider: mattingModel.provider, threads: mattingModel.threads };
+  globalThis.__openphotoid = { provider: mattingModel.provider, threads: mattingModel.threads, notes: sessionNotes };
   return { core, provider: mattingModel.provider };
 }
 

@@ -39,9 +39,14 @@ async function init() {
   // the page is isolated from its second load onwards. Asking for threads
   // without isolation makes onnxruntime probe, fail and fall back, so the
   // count is decided here rather than left to the probe.
-  const threads = globalThis.crossOriginIsolated
-    ? Math.max(1, Math.min(4, (navigator.hardwareConcurrency ?? 2) - 1))
-    : 1;
+  // `?threads=N` on the URL overrides the count, for testing a device that
+  // misbehaves with several — the diagnostics page reports what it got.
+  const forced = Number(new URLSearchParams(location.search).get("threads"));
+  const threads = forced > 0
+    ? forced
+    : globalThis.crossOriginIsolated
+      ? Math.max(1, Math.min(4, (navigator.hardwareConcurrency ?? 2) - 1))
+      : 1;
   ort.env.wasm.numThreads = threads;
   ort.env.logLevel = "error";
 
@@ -57,6 +62,9 @@ async function init() {
  * on a specific model, and the useful behaviour there is a slower photo,
  * not an error page.
  */
+/** What happened on the way to a session, for the diagnostics page. */
+export const notes = [];
+
 export async function createSession(bytes) {
   const { ort, webgpu, threads } = await loadOrt();
   if (webgpu) {
@@ -67,12 +75,27 @@ export async function createSession(bytes) {
       });
       return { session, provider: "webgpu", threads, ort };
     } catch (e) {
+      notes.push(`WebGPU refused the model, using the CPU: ${e?.message ?? e}`);
       console.warn("WebGPU session failed, falling back to CPU:", e);
     }
   }
-  const session = await ort.InferenceSession.create(bytes, {
-    executionProviders: ["wasm"],
-    graphOptimizationLevel: "all",
-  });
-  return { session, provider: "cpu", threads, ort };
+  // The optimiser can fail on a graph a browser's wasm build cannot handle
+  // — iOS 17 Safari refused MODNet at "all" with "Could not find OrtValue
+  // with name '686'" — so step down before giving up. A less-optimised
+  // session is slower; no session is a blank page.
+  let last;
+  for (const level of ["all", "basic", "disabled"]) {
+    try {
+      const session = await ort.InferenceSession.create(bytes, {
+        executionProviders: ["wasm"],
+        graphOptimizationLevel: level,
+      });
+      if (level !== "all") notes.push(`CPU session needed graph optimisation "${level}"`);
+      return { session, provider: "cpu", threads, ort };
+    } catch (e) {
+      last = e;
+      notes.push(`CPU session at optimisation "${level}" failed: ${e?.message ?? e}`);
+    }
+  }
+  throw last;
 }
