@@ -42,6 +42,11 @@ body {
 .topbar .brand .of {
   color: var(--text-faint);
 }
+/* The full stop is part of the name, on every surface that sets it in type,
+   and it is the one place the product's accent appears in the chrome. */
+.topbar .brand .dot {
+  color: var(--app-frame);
+}
 
 .stack {
   display: grid;

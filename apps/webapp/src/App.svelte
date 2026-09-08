@@ -48,7 +48,7 @@
 
 <header class="topbar">
   <button class="brand" onclick={() => go("home")}>
-    <span class="of">Open</span>PhotoId
+    <span class="of">Open</span>PhotoId<span class="dot">.</span>
   </button>
 
   {#if route.name !== "home"}
