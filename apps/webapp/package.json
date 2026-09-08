@@ -10,7 +10,8 @@
     "preview": "vite preview --port 8082",
     "e2e": "playwright test",
     "serve": "node e2e/server.mjs",
-    "screenshots": "node e2e/capture.mjs screenshots"
+    "screenshots": "node e2e/capture.mjs screenshots",
+    "assets": "node scripts/make-assets.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

@@ -1,7 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#1a1a1a"/>
-  <rect x="14" y="11" width="36" height="42" rx="3" fill="#f8f8f7"/>
-  <circle cx="32" cy="27" r="9" fill="#c1c0b8"/>
-  <path d="M18 49c2.6-7.6 7.6-11.4 14-11.4S43.4 41.4 46 49z" fill="#c1c0b8"/>
-  <rect x="14" y="11" width="36" height="42" rx="3" fill="none" stroke="#15b9eb" stroke-width="2.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="OpenPhotoId">
+  <rect width="512" height="512" rx="112" fill="#111111"/>
+
+  <rect x="136" y="96" width="240" height="320" rx="20" fill="#f8f8f7"/>
+  <circle cx="256" cy="222" r="58" fill="#c1c0b8"/>
+  <path d="M164 400c14-58 46-90 92-90s78 32 92 90z" fill="#c1c0b8"/>
+  <g stroke="#8c6cff" stroke-width="18" stroke-linecap="round" fill="none">
+    <path d="M104 156 L104 108 L152 108"/>
+    <path d="M360 108 L408 108 L408 156"/>
+    <path d="M408 356 L408 404 L360 404"/>
+    <path d="M152 404 L104 404 L104 356"/>
+  </g>
 </svg>

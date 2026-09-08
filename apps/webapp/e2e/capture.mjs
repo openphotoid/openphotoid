@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { FIXTURES, fixture } from "./helpers.mjs";
 
 const out = process.argv[2] ?? "screenshots";
-const base = process.env.BASE_URL ?? "http://localhost:5195";
+const base = process.env.BASE_URL ?? "http://localhost:5199";
 mkdirSync(out, { recursive: true });
 
 const browser = await chromium.launch();

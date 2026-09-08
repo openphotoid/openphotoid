@@ -141,7 +141,7 @@ captured by `e2e/capture.mjs` driving the real UI rather than drawn by hand.
 
 ```sh
 npm --prefix apps/webapp run build    # e2e and screenshots run against dist/
-npm --prefix apps/webapp run e2e      # Playwright, serves dist/ on :5195
+npm --prefix apps/webapp run e2e      # Playwright, serves dist/ on :5199
 npm --prefix apps/webapp run screenshots
 ```
 

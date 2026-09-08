@@ -12,7 +12,7 @@ import { join, extname, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..", "dist");
-const port = Number(process.env.PORT ?? 5195);
+const port = Number(process.env.PORT ?? 5199);
 const coi = process.env.COI === "1";
 
 const types = {
