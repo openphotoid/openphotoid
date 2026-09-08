@@ -96,7 +96,15 @@
   {/if}
 
   {#if error}
-    <div class="card notice"><p>{error}</p></div>
+    <div class="card notice">
+      {#if /Can't create a session|Failed to find args|OrtValue/.test(error)}
+        <!-- Seen on iOS 17.0 Safari: the runtime's WebAssembly is mis-executed
+             at session creation, at every optimisation level and with one
+             thread. iOS 26 runs it. Say so before the raw text. -->
+        <p><strong>{$t("diag.noSession")}</strong></p>
+      {/if}
+      <p class="raw">{error}</p>
+    </div>
   {/if}
 
   {#if result}
@@ -137,6 +145,9 @@
   .kv dd { margin: 0; word-break: break-word; }
   .mono { font-family: var(--font-mono); font-size: 0.9rem; }
   .small { font-size: 0.75rem; }
+  /* Runtime errors are one long token; without this the page widens past the phone. */
+  .raw { font-family: var(--font-mono); font-size: 0.75rem; overflow-wrap: anywhere; word-break: break-word; color: var(--text-muted); }
+  .notice p { overflow-wrap: anywhere; }
   .preview-row { display: grid; grid-template-columns: 120px 1fr; gap: var(--space-4); align-items: start; }
   .preview-row img { width: 120px; border-radius: var(--radius-sm); border: var(--border-width) solid var(--border-hairline); }
   .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-2); }

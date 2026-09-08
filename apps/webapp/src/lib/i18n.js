@@ -33,6 +33,7 @@ const en = {
   "diag.provider": "Ran on",
   "diag.source": "Sample photo",
   "diag.total": "Total",
+  "diag.noSession": "This browser's WebAssembly engine could not start the model. This is known on iOS 17; iOS 18 or later, and any current Chrome or Firefox, run it.",
   "account.title": "Account",
   "account.lede":
     "Optional, and it unlocks nothing here. An account carries credits to our other apps; everything on this site stays free either way.",
@@ -218,6 +219,7 @@ const zh = {
   "diag.provider": "运行方式",
   "diag.source": "示例照片",
   "diag.total": "总耗时",
+  "diag.noSession": "这个浏览器的 WebAssembly 引擎无法启动模型。iOS 17 上已知如此；iOS 18 及以上，以及当前版本的 Chrome、Firefox 均可运行。",
   "account.title": "账户",
   "account.lede":
     "可选，而且不会解锁这里的任何功能。账户用于把积分带到我们的其他应用；本站的一切始终免费。",
