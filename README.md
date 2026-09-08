@@ -1,5 +1,13 @@
 # OpenPhotoId
 
+**Use it now:** [app.openphotoid.com](https://app.openphotoid.com/) — the web
+app, on a phone, tablet or computer, nothing to install. Site and privacy
+policy at [openphotoid.com](https://openphotoid.com/). Desktop installers for
+macOS and Windows arrive with the first release candidate on the
+[releases page](https://github.com/openphotoid/openphotoid/releases); store
+apps for iPhone, iPad and Android are [in progress](docs/mobile.md) on the
+same engine.
+
 Formerly OpenFrame; the web build shipped as OpenPassport until September 2026.
 
 Open-source, local-first photo tool written in Rust: AI background
