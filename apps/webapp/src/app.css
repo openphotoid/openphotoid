@@ -11,16 +11,14 @@ body {
 }
 
 .shell {
-  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
   max-width: 720px;
   margin: 0 auto;
   padding: 0 var(--space-4) var(--space-8);
+  /* After the shorthand, or the shorthand wins. */
+  padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
 }
 
 .topbar {
-  /* Inside the phone apps the WebView runs edge to edge (viewport-fit=cover),
-     so the bar keeps clear of the status bar and the notch itself. */
-  padding-top: calc(var(--space-3) + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 20;
@@ -28,6 +26,10 @@ body {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  /* Inside the phone apps the WebView runs edge to edge (viewport-fit=cover),
+     so the bar keeps clear of the status bar and the notch itself. Stated
+     after the shorthand, which would otherwise reset it. */
+  padding-top: calc(var(--space-3) + env(safe-area-inset-top, 0px));
   background: color-mix(in srgb, var(--bg-page) 88%, transparent);
   backdrop-filter: blur(12px);
   border-bottom: var(--border-width) solid var(--border-hairline);

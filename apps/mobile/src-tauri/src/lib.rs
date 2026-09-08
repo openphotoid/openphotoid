@@ -42,17 +42,74 @@ fn unb64(s: &str) -> CmdResult<Vec<u8>> {
         .map_err(|e| format!("bad base64: {e}"))
 }
 
+#[cfg(target_os = "android")]
+const MODEL_FILES: [&str; 2] = [
+    "face_detection_yunet_2023mar.onnx",
+    "modnet_photographic_portrait_matting.tract.onnx",
+];
+
+/// Where the bundled models can be opened as ordinary files.
+///
+/// On iOS and desktop the bundle's resource directory is a real directory
+/// and is used as-is. On Android it is an `asset://localhost/` URI inside
+/// the APK, which `std::fs` cannot open and which is read-only, so the two
+/// models are copied through the fs plugin (which resolves assets via the
+/// Android AssetManager) into the app's data directory once, and that
+/// directory is used from then on.
+fn models_dir(app: &tauri::AppHandle) -> CmdResult<PathBuf> {
+    let resources: PathBuf = app
+        .path()
+        .resource_dir()
+        .map_err(|e| format!("resource dir: {e}"))?
+        .join("models");
+    #[cfg(not(target_os = "android"))]
+    {
+        return Ok(resources);
+    }
+    #[cfg(target_os = "android")]
+    materialise_assets(app, &resources)
+}
+
+/// Android only: copy the models out of the APK into the data directory.
+#[cfg(target_os = "android")]
+fn materialise_assets(app: &tauri::AppHandle, resources: &std::path::Path) -> CmdResult<PathBuf> {
+    use tauri_plugin_fs::FsExt as _;
+    if !resources
+        .to_string_lossy()
+        .starts_with(tauri::utils::platform::ANDROID_ASSET_PROTOCOL_URI_PREFIX)
+    {
+        return Ok(resources.to_path_buf());
+    }
+    let dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("data dir: {e}"))?
+        .join("models");
+    std::fs::create_dir_all(&dir).map_err(|e| format!("create {}: {e}", dir.display()))?;
+    for name in MODEL_FILES {
+        let dst = dir.join(name);
+        if dst.exists() {
+            continue;
+        }
+        let src = resources.join(name);
+        let bytes = app
+            .fs()
+            .read(src.clone())
+            .map_err(|e| format!("read asset {}: {e}", src.display()))?;
+        let part = dir.join(format!("{name}.part"));
+        std::fs::write(&part, &bytes).map_err(|e| format!("write {}: {e}", part.display()))?;
+        std::fs::rename(&part, &dst).map_err(|e| format!("place {}: {e}", dst.display()))?;
+    }
+    Ok(dir)
+}
+
 /// The two models, loaded once from the app bundle's resources.
 fn models<'a>(
     app: &tauri::AppHandle,
     guard: &'a mut Option<Models>,
 ) -> CmdResult<&'a mut Models> {
     if guard.is_none() {
-        let dir: PathBuf = app
-            .path()
-            .resource_dir()
-            .map_err(|e| format!("resource dir: {e}"))?
-            .join("models");
+        let dir = models_dir(app)?;
         // The registry would download on first run; a phone app ships them.
         std::env::set_var("OPENPHOTOID_MODELS_DIR", &dir);
         let face = YuNet::load(Ep::Cpu).map_err(|e| format!("face model: {e}"))?;

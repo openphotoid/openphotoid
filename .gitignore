@@ -30,3 +30,4 @@ apps/mobile/src-tauri/gen/apple/build/
 apps/mobile/src-tauri/gen/apple/Externals/
 apps/mobile/src-tauri/gen/apple/*.xcodeproj/xcuserdata/
 apps/mobile/src-tauri/gen/apple/**/xcuserdata/
+apps/mobile/src-tauri/gen/android/buildSrc/.kotlin/
