@@ -24,6 +24,15 @@ const en = {
   "nav.home": "Home",
   "nav.account": "Account",
 
+  "diag.title": "Does it work on this device?",
+  "diag.lede": "Runs the whole pipeline on a sample portrait and shows what this browser did with it. Nothing you own is involved.",
+  "diag.browser": "Browser",
+  "diag.viewport": "Screen",
+  "diag.isolated": "Threads possible",
+  "diag.run": "Run the test",
+  "diag.provider": "Ran on",
+  "diag.source": "Sample photo",
+  "diag.total": "Total",
   "account.title": "Account",
   "account.lede":
     "Optional, and it unlocks nothing here. An account carries credits to our other apps; everything on this site stays free either way.",
@@ -200,6 +209,15 @@ const zh = {
   "nav.home": "首页",
   "nav.account": "账户",
 
+  "diag.title": "这台设备能用吗？",
+  "diag.lede": "用一张示例人像跑完整个流程，显示这个浏览器的表现。不涉及你自己的任何照片。",
+  "diag.browser": "浏览器",
+  "diag.viewport": "屏幕",
+  "diag.isolated": "可用多线程",
+  "diag.run": "开始测试",
+  "diag.provider": "运行方式",
+  "diag.source": "示例照片",
+  "diag.total": "总耗时",
   "account.title": "账户",
   "account.lede":
     "可选，而且不会解锁这里的任何功能。账户用于把积分带到我们的其他应用；本站的一切始终免费。",

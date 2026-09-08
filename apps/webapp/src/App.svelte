@@ -9,6 +9,7 @@
   import Coverage from "./views/Coverage.svelte";
   import About from "./views/About.svelte";
   import Account from "./views/Account.svelte";
+  import Diagnostics from "./views/Diagnostics.svelte";
   import { isSignInReturn, isConsumedSignInReturn } from "$lib/openapps.js";
 
   /*
@@ -127,6 +128,8 @@
     <About />
   {:else if route.name === "account"}
     <Account {go} />
+  {:else if route.name === "diagnostics"}
+    <Diagnostics {go} autorun={route.arg === "run"} />
   {:else}
     <Home {specs} {go} {setPicked} />
   {/if}

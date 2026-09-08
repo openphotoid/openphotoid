@@ -250,6 +250,18 @@ test.describe("offline and privacy", () => {
   });
 });
 
+test.describe("diagnostics", () => {
+  test("the on-device test page runs the pipeline on the shipped sample and reports what ran", async ({ page }) => {
+    await page.goto("/#/diagnostics/run");
+    await expect(page.getByTestId("diag-result")).toBeVisible({ timeout: 150_000 });
+    const text = await page.getByTestId("diag-result").innerText();
+    expect(text).toMatch(/Ran on\s+(cpu|webgpu)/);
+    expect(text).toMatch(/matting\s+\d+ ms/);
+    await expect(page.locator("[data-testid=diag-result] ul.checks li")).toHaveCount(11);
+    await expect(page.locator("[data-testid=diag-result] img")).toBeVisible();
+  });
+});
+
 // ---------------------------------------------------------------- account
 //
 // Every failure here is silent: a missing CORS origin, a configure() that
