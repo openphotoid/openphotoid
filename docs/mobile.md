@@ -12,7 +12,7 @@ app at app.openphotoid.com is the first surface, not the destination.
 | **iPhone and iPad app** | **Built and verified.** `apps/mobile` (Tauri 2), the same UI, inference native in Rust through `tract`. The device test reports "native · tract · 10 threads" and about 3.0 s end to end on the iPhone 17 Pro Max (iOS 26.5), iPhone 15 Pro (iOS 17.0), iPad Pro 11 (iOS 17.0) and iPad Pro 11 M5 (iOS 26.5) simulators, every check filled in — including the iOS 17 devices the web app cannot serve. Captures in `apps/webapp/screenshots/native/`. |
 | **Android app** | **Built and verified.** Same crate, universal APK. Android 15 emulator: "native · tract · 4 threads", about 3.5 s. Debug-signed APK installs and runs; the release workflow signs the same way. |
 | Desktop | Tauri 2 + Svelte, `apps/desktop`, unsigned bundles. |
-| Release candidate | `.github/workflows/release.yml` builds the APK, the unsigned IPA and the desktop bundles on any `v*` tag and attaches them to a prerelease. Not yet cut: the first tag is `v0.1.0-rc.1`. |
+| Release candidate | **`v0.1.0-rc.2` is on the [releases page](https://github.com/openphotoid/openphotoid/releases)** (8 September 2026): the debug-signed universal APK, the unsigned IPA, and the macOS and Windows bundles, built by `.github/workflows/release.yml` from the tag. `rc.1` proved the Android and desktop jobs; its iOS job failed on signing, fixed in rc.2 with the CLI's `--no-sign --archive-only`. The universal APK is 259 MB because it carries four ABIs; a Play submission uses an AAB, which Play splits per device. |
 | Store listings | Not started; step 6 below. |
 
 Two things the phone builds taught, both fixed in the tree:
@@ -50,8 +50,7 @@ Android NDK 27, and the `aarch64-apple-ios`, `aarch64-apple-ios-sim`,
 
 ## The steps
 
-Steps 1–4 are done (8 September 2026). Step 5 is ready to run and waits for
-the push. Step 6 waits for the accounts.
+Steps 1–5 are done (8 September 2026). Step 6 waits for the accounts.
 
 1. **Wire the tract MODNet into the registry.** `frame-engine::registry`
    gains the patched MODNet as the model the `tract-backend` feature loads,
