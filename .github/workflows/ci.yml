@@ -30,10 +30,11 @@ jobs:
       - run: cargo fmt --check
       - run: cargo clippy --workspace --exclude openphotoid-mobile --all-targets -- -D warnings
       # Tauri's build script refuses to compile if a bundled resource is
-      # missing; a check needs the files to exist, not to be real. The
-      # release workflow fetches and patches the actual models.
+      # missing, and its context macro if `frontendDist` is; a check needs
+      # them to exist, not to be real. The release workflow fetches and
+      # patches the actual models and builds the real front end.
       - run: |
-          mkdir -p .vendor/models
+          mkdir -p .vendor/models apps/webapp/dist
           touch .vendor/models/face_detection_yunet_2023mar.onnx .vendor/models/modnet_photographic_portrait_matting.tract.onnx
       - run: cargo check -p openphotoid-mobile --release
 
