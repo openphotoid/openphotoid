@@ -103,9 +103,12 @@ batch writes — as a download rather than to a directory.
 | ONNX runtime | 3.6 MB gzipped (CPU) **or** 6.4 MB gzipped (WebGPU) |
 | MODNet + YuNet weights | ~26 MB |
 
-Exactly one ONNX runtime is fetched: `src/lib/ort.js` picks the WebGPU
-build when the browser has WebGPU and the CPU build when it does not.
-Both are shipped, which costs disk on the host and nothing on the wire.
+Exactly one ONNX runtime is fetched. As of 8 September 2026 that is the
+CPU build for everyone: with onnxruntime-web 1.29 the WebGPU provider
+returns a MODNet matte full of holes — the same wrong pixels in Chrome and
+WebKit, at every graph-optimisation level and with memory planning off —
+while the CPU path is exact. WebGPU stays behind `?gpu=1` for
+investigation, and both runtimes are still shipped.
 
 The weights are the bulk, and they are fetched on first use with a real
 progress bar rather than precached at first paint — someone reading the

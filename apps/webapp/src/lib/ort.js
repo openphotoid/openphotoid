@@ -67,11 +67,22 @@ export const notes = [];
 
 export async function createSession(bytes) {
   const { ort, webgpu, threads } = await loadOrt();
-  if (webgpu) {
+  // WebGPU is opt-in (`?gpu=1`) until it is right. With onnxruntime-web
+  // 1.29 the WebGPU provider returns a MODNet matte full of holes — the
+  // same wrong pixels in Chrome and WebKit, at every optimisation level and
+  // with memory planning off — while the CPU path is correct. A slower
+  // photo beats a wrong one; the threaded CPU path is 400 ms on a laptop.
+  if (webgpu && new URLSearchParams(location.search).get("gpu") === "1") {
     try {
+      const q = new URLSearchParams(location.search);
       const session = await ort.InferenceSession.create(bytes, {
         executionProviders: ["webgpu"],
-        graphOptimizationLevel: "all",
+        // MODNet adds its decoder output to a resized copy of its input;
+        // on WebGPU the runtime's memory planner reuses a buffer across
+        // that add and the matte comes back with holes — the same shape
+        // of failure OpenPixels hit. Planning off costs a little memory.
+        enableMemPattern: q.get("mempattern") === "1",
+        graphOptimizationLevel: q.get("gpuopt") ?? "all",
       });
       return { session, provider: "webgpu", threads, ort };
     } catch (e) {
@@ -83,6 +94,7 @@ export async function createSession(bytes) {
   // — iOS 17 Safari refused MODNet at "all" with "Could not find OrtValue
   // with name '686'" — so step down before giving up. A less-optimised
   // session is slower; no session is a blank page.
+  if (webgpu && !notes.some((n) => n.startsWith("WebGPU is present"))) notes.push("WebGPU is present but not used: onnxruntime-web 1.29's WebGPU matte is wrong (holes through hair); the CPU path is exact");
   let last;
   for (const level of ["all", "basic", "disabled"]) {
     try {

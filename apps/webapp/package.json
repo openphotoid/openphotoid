@@ -11,7 +11,9 @@
     "e2e": "playwright test",
     "serve": "node e2e/server.mjs",
     "screenshots": "node e2e/capture.mjs screenshots",
-    "assets": "node scripts/make-assets.mjs"
+    "assets": "node scripts/make-assets.mjs",
+    "e2e:devices": "playwright test -c playwright.mobile.config.js",
+    "screenshots:mobile": "node e2e/capture-mobile.mjs screenshots/mobile"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
