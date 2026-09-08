@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "default",
+  "description": "Capabilities for OpenPhotoId's window on a phone",
+  "windows": ["main"],
+  "permissions": ["core:default", "dialog:default", "fs:default", "opener:default"]
+}

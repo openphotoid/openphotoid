@@ -49,7 +49,7 @@
       if (!photo.faceFound) throw new Error($t("studio.noface"));
       const { report } = await photo.render("us-passport", { retouch: 0, backdrop: { kind: "solid", rgb: [255, 255, 255] }, garment: null }, {}, { enhance: true });
       if (resultUrl) URL.revokeObjectURL(resultUrl);
-      resultUrl = URL.createObjectURL(new Blob([photo.outputJpeg(90)], { type: "image/jpeg" }));
+      resultUrl = URL.createObjectURL(new Blob([await photo.outputJpeg(90)], { type: "image/jpeg" }));
       const timings = Object.fromEntries(
         performance.getEntriesByType("measure")
           .filter((m) => m.name.startsWith("openphotoid:"))
@@ -112,7 +112,7 @@
       <div class="preview-row">
         {#if resultUrl}<img src={resultUrl} alt={$t("studio.after")} />{/if}
         <dl class="kv">
-          <dt>{$t("diag.provider")}</dt><dd class="mono">{result.provider}{result.provider === "cpu" ? ` · ${result.threads} thread${result.threads === 1 ? "" : "s"}` : ""}</dd>
+          <dt>{$t("diag.provider")}</dt><dd class="mono">{result.provider === "native" ? "native · tract" : result.provider}{result.provider !== "webgpu" ? ` · ${result.threads} thread${result.threads === 1 ? "" : "s"}` : ""}</dd>
           <dt>{$t("diag.source")}</dt><dd class="mono">{result.source}</dd>
           <dt>{$t("diag.total")}</dt><dd class="mono">{result.wall} ms</dd>
           {#each result.notes as n, i (i)}

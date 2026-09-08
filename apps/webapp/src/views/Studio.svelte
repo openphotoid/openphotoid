@@ -125,8 +125,8 @@
         enhance: $settings.sharpen,
       }));
       if (resultUrl) URL.revokeObjectURL(resultUrl);
-      resultUrl = objectUrl(photo.outputJpeg(92));
-      sheetCount = spec.print ? photo.sheetInfo(sheet).count : null;
+      resultUrl = objectUrl(await photo.outputJpeg(92));
+      sheetCount = spec.print ? (await photo.sheetInfo(sheet)).count : null;
       error = null;
     } catch (e) {
       error = e.message ?? String(e);
@@ -166,7 +166,7 @@
     const f = e.currentTarget.files?.[0];
     if (!f || !photo) return;
     e.currentTarget.value = "";
-    photo.setBackdropImage(await readFile(f));
+    await photo.setBackdropImage(await readFile(f));
     backdropKind = "image";
     options.backdrop = { kind: "image", blur: backdropBlur };
     await render();
@@ -200,21 +200,21 @@
     setTimeout(() => (saved = ""), 1800);
   }
 
-  function saveDigital() {
+  async function saveDigital() {
     const win = sizeWindow(spec);
     const bytes = win
-      ? photo.outputJpegWithin(win.min ?? 0, win.max ?? 10_000)
-      : photo.outputJpeg(95);
+      ? await photo.outputJpegWithin(win.min ?? 0, win.max ?? 10_000)
+      : await photo.outputJpeg(95);
     save(bytes, filename(spec.id, "jpg"), "image/jpeg");
     flash("digital");
   }
-  function savePng() {
-    save(photo.outputPng(), filename(spec.id, "png"), "image/png");
+  async function savePng() {
+    save(await photo.outputPng(), filename(spec.id, "png"), "image/png");
     flash("png");
   }
-  function saveSheet() {
+  async function saveSheet() {
     const dpi = spec.print?.dpi_default ?? 300;
-    save(photo.sheetJpeg(sheet, dpi, true, 95), `${spec.id}-sheet-${sheet}.jpg`, "image/jpeg");
+    save(await photo.sheetJpeg(sheet, dpi, true, 95), `${spec.id}-sheet-${sheet}.jpg`, "image/jpeg");
     flash("sheet");
   }
 

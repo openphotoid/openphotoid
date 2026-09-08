@@ -10,8 +10,10 @@ members = [
     "crates/frame-batch",
     "crates/frame-license",
     "crates/frame-retouch",
+    "crates/frame-session",
     "crates/frame-wasm",
     "apps/desktop/src-tauri",
+    "apps/mobile/src-tauri",
 ]
 
 [workspace.package]
@@ -33,6 +35,7 @@ frame-face = { path = "crates/frame-face", default-features = false }
 frame-compliance = { path = "crates/frame-compliance", default-features = false }
 frame-sheet = { path = "crates/frame-sheet" }
 frame-retouch = { path = "crates/frame-retouch" }
+frame-session = { path = "crates/frame-session" }
 
 # --- imaging (MIT/Apache only — see docs/research/02-models-licenses.md §D) ---
 # Only the formats a photo tool receives. The default set also compiles an

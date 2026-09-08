@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OpenPhotoId",
+  "version": "0.1.0",
+  "identifier": "com.openapps.openphotoid",
+  "build": {
+    "beforeBuildCommand": "npm --prefix ../webapp run build",
+    "frontendDist": "../../webapp/dist"
+  },
+  "app": {
+    "windows": [{ "label": "main", "title": "OpenPhotoId" }],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "icon": ["icons/icon.png"],
+    "resources": {
+      "../../../.vendor/models/face_detection_yunet_2023mar.onnx": "models/face_detection_yunet_2023mar.onnx",
+      "../../../.vendor/models/modnet_photographic_portrait_matting.tract.onnx": "models/modnet_photographic_portrait_matting.tract.onnx"
+    },
+    "iOS": { "minimumSystemVersion": "15.0" },
+    "android": { "minSdkVersion": 26 }
+  }
+}

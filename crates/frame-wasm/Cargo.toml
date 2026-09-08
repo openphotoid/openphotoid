@@ -10,14 +10,6 @@ description = "wasm-bindgen bindings that run OpenPhotoId's pipeline in a browse
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-frame-core.workspace = true
-frame-face.workspace = true
-frame-matting.workspace = true
-frame-compliance.workspace = true
-frame-sheet.workspace = true
-frame-retouch.workspace = true
-image.workspace = true
-serde.workspace = true
-serde_json.workspace = true
+frame-session.workspace = true
 wasm-bindgen.workspace = true
 console_error_panic_hook.workspace = true

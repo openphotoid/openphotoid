@@ -66,7 +66,13 @@ impl Modnet {
     /// [`Modnet::load_from_path`] with a model prepared by
     /// `scripts/patch-modnet-for-tract.py` instead.
     pub fn load(ep: frame_engine::Ep) -> Result<Self> {
-        let path = frame_engine::ensure_model(&frame_engine::registry::MODNET_PHOTOGRAPHIC)?;
+        // Under tract the stock export does not load; the registry carries
+        // the patched variant, which the phone apps ship in their bundle.
+        #[cfg(feature = "tract-backend")]
+        let spec = &frame_engine::registry::MODNET_TRACT;
+        #[cfg(not(feature = "tract-backend"))]
+        let spec = &frame_engine::registry::MODNET_PHOTOGRAPHIC;
+        let path = frame_engine::ensure_model(spec)?;
         Self::load_from_path(&path, ep)
     }
 
@@ -80,6 +86,16 @@ impl Modnet {
 
     pub fn ep(&self) -> frame_engine::Ep {
         self.session.ep
+    }
+
+    /// The raw forward pass on an already-prepared 512×512 input, returning
+    /// the first output flat — for a caller driving `frame-session`.
+    pub fn run_raw(&mut self, input: ArrayD<f32>) -> Result<ArrayD<f32>> {
+        let mut outputs = self.session.run_f32(input)?;
+        if outputs.is_empty() {
+            return Err(MattingError::BadOutput("no outputs".into()));
+        }
+        Ok(outputs.swap_remove(0))
     }
 
     pub fn infer(&mut self, frame: &Frame) -> Result<Matte> {

@@ -23,6 +23,7 @@ const en = {
   "nav.back": "Back",
   "nav.home": "Home",
   "nav.account": "Account",
+  "nav.diagnostics": "Device test",
 
   "diag.title": "Does it work on this device?",
   "diag.lede": "Runs the whole pipeline on a sample portrait and shows what this browser did with it. Nothing you own is involved.",
@@ -209,6 +210,7 @@ const zh = {
   "nav.back": "返回",
   "nav.home": "首页",
   "nav.account": "账户",
+  "nav.diagnostics": "设备测试",
 
   "diag.title": "这台设备能用吗？",
   "diag.lede": "用一张示例人像跑完整个流程，显示这个浏览器的表现。不涉及你自己的任何照片。",

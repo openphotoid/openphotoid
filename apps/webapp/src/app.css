@@ -11,12 +11,16 @@ body {
 }
 
 .shell {
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
   max-width: 720px;
   margin: 0 auto;
   padding: 0 var(--space-4) var(--space-8);
 }
 
 .topbar {
+  /* Inside the phone apps the WebView runs edge to edge (viewport-fit=cover),
+     so the bar keeps clear of the status bar and the notch itself. */
+  padding-top: calc(var(--space-3) + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 20;

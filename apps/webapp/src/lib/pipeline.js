@@ -15,6 +15,7 @@
 
 import { createSession, notes as sessionNotes } from "./ort.js";
 import { fetchModel } from "./models.js";
+import { isNative, NativePhoto, nativeSpecs, nativeInfo } from "./platform.js";
 
 /**
  * Stage timings as `performance.measure` entries named `openphotoid:<stage>`.
@@ -51,6 +52,13 @@ export async function loadCore() {
  * times.
  */
 export async function loadModels(onProgress) {
+  if (isNative) {
+    // The phone app ships its models and runs them in Rust; nothing to fetch.
+    const info = await nativeInfo();
+    globalThis.__openphotoid = { provider: info.provider, threads: info.threads, notes: [] };
+    onProgress?.({ id: "matting", fraction: 1 });
+    return { core: null, provider: info.provider };
+  }
   const core = await loadCore();
   if (!faceModel) {
     const bytes = await fetchModel("face", (f) => onProgress?.({ id: "face", fraction: f }));
@@ -139,6 +147,7 @@ export class Photo {
    * whatever fraction of it the head happened to occupy.
    */
   static async open(bytes, { quality = false, onStage } = {}) {
+    if (isNative) return NativePhoto.open(bytes, { quality, onStage });
     const { core } = await loadModels();
     const session = await timed("decode", async () => core.Session.decode(bytes));
     const photo = new Photo(core, session);
@@ -245,6 +254,7 @@ export class Photo {
 
 /** The spec dataset, read out of the wasm module once. */
 export async function loadSpecs() {
+  if (isNative) return nativeSpecs();
   const core = await loadCore();
   return JSON.parse(core.specs_json());
 }

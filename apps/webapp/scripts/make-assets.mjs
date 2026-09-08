@@ -146,6 +146,11 @@ w(APP_ICONS, "icon-192.png", await png(page, iconSvg, 192));
 w(APP_ICONS, "icon-512.png", await png(page, iconSvg, 512));
 w(APP_ICONS, "apple-touch-icon.png", await png(page, iconSvg, 180));
 w(APP_ICONS, "icon-maskable-512.png", await png(page, maskableSvg, 512));
+// The phone apps: `tauri icon` derives every Android and iOS size from one
+// 1024-px square, so the store icon is the same drawing as the favicon.
+const MOBILE = join(WEB_DIR, "..", "mobile", "src-tauri", "icons");
+mkdirSync(MOBILE, { recursive: true });
+w(MOBILE, "icon.png", await png(page, iconSvg, 1024));
 for (const size of [16, 32, 48, 180, 192, 512]) w(SITE, `icon-${size}.png`, await png(page, iconSvg, size));
 w(SITE, "favicon.ico", ico([
   { size: 16, data: await png(page, iconSvg, 16) },

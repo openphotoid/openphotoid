@@ -1,0 +1,32 @@
+[package]
+name = "openphotoid-mobile"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "OpenPhotoId for iPhone, iPad and Android: the web app's UI in front of the Rust pipeline, inference native through tract"
+
+[lib]
+# Tauri mobile builds the crate as a library the platform shells load.
+name = "openphotoid_mobile_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-opener = "2"
+serde.workspace = true
+serde_json.workspace = true
+base64 = "0.22"
+frame-core.workspace = true
+frame-session.workspace = true
+# Inference runs natively, through tract: ort ships no prebuilt binary for
+# iOS or Android, and the browser's runtime is not reachable from here.
+frame-engine = { workspace = true, features = ["tract-backend"] }
+frame-face = { workspace = true, features = ["tract-backend"] }
+frame-matting = { workspace = true, features = ["tract-backend"] }
+ndarray.workspace = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }

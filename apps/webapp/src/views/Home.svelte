@@ -101,6 +101,7 @@
     <button class="inline" onclick={() => go("batch")}>{$t("nav.batch")}</button>
     <button class="inline" onclick={() => go("coverage")}>{$t("nav.coverage")}</button>
     <button class="inline" onclick={() => go("about")}>{$t("nav.about")}</button>
+    <button class="inline" onclick={() => go("diagnostics")}>{$t("nav.diagnostics")}</button>
   </nav>
 </div>
 

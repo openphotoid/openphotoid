@@ -20,3 +20,13 @@ apps/webapp/playwright-report/
 .claude/
 *.log
 .DS_Store
+
+# Phone apps (apps/mobile): the generated Android and Xcode projects are
+# committed; their build output and Gradle caches are not.
+apps/mobile/src-tauri/gen/android/.gradle/
+apps/mobile/src-tauri/gen/android/**/build/
+apps/mobile/src-tauri/gen/android/local.properties
+apps/mobile/src-tauri/gen/apple/build/
+apps/mobile/src-tauri/gen/apple/Externals/
+apps/mobile/src-tauri/gen/apple/*.xcodeproj/xcuserdata/
+apps/mobile/src-tauri/gen/apple/**/xcuserdata/
