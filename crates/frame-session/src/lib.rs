@@ -47,7 +47,6 @@ use frame_matting::Matte;
 use frame_retouch::{backdrop::Backdrop, enhance, garment, skin};
 use serde::{Deserialize, Serialize};
 
-
 /// One error type for the whole session: a message a front end can show.
 #[derive(Debug, Clone, thiserror::Error)]
 #[error("{0}")]
@@ -516,7 +515,9 @@ impl Session {
                     },
                     BackdropOption::Image { blur } => {
                         let rgba = self.backdrop_image.clone().ok_or_else(|| {
-                            SessionError::new("no backdrop image set — call set_backdrop_image first")
+                            SessionError::new(
+                                "no backdrop image set — call set_backdrop_image first",
+                            )
                         })?;
                         Backdrop::Image {
                             rgba,

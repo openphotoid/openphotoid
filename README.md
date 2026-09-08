@@ -58,11 +58,13 @@ credentials only the project owner should hold).
 
 ```sh
 export CARGO_TARGET_DIR=~/.cache/openphotoid-target   # keep target off shared mounts
-cargo build --release && cargo test --workspace --release
+# --exclude openphotoid-mobile: the phone crate selects the tract backend, and a
+# whole-workspace build would enable both inference backends at once.
+cargo build --release && cargo test --workspace --exclude openphotoid-mobile --release
 
 # real-inference integration tests (download models, run actual inference —
 # not in the default test run):
-cargo test --workspace --release -- --ignored
+cargo test --workspace --exclude openphotoid-mobile --release -- --ignored
 
 # spikes / manual tools
 cargo run --release -p frame-matting --bin matting-spike -- testdata/portrait-obama.jpg /tmp/out modnet
