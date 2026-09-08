@@ -21,6 +21,25 @@ const en = {
   "nav.coverage": "Documents covered",
   "nav.about": "What this costs",
   "nav.back": "Back",
+  "nav.home": "Home",
+  "nav.account": "Account",
+
+  "account.title": "Account",
+  "account.lede":
+    "Optional, and it unlocks nothing here. An account carries credits to our other apps; everything on this site stays free either way.",
+  "account.signin.title": "Sign in to OpenPhotoId",
+  "account.signin.body":
+    "One account across our apps. You do not need it here — nothing on this site is behind it.",
+  "account.free.title": "Nothing here is behind it",
+  "account.free.body":
+    "Every feature runs on your own device, so it costs us nothing per photo and there is nothing to charge for. Signed in or not, you get all of it, with no limit.",
+  "account.private.title": "Your photo is still not involved",
+  "account.private.body":
+    "Signing in sends an email address or a wallet signature to our account server, and nothing else. No photo is uploaded, before or after — there is still no server that accepts one.",
+  "account.loading": "Loading the account tools…",
+  "account.offline.title": "Could not reach the account server",
+  "account.offline.body":
+    "Everything else on this site works without it — nothing here depends on an account. Try again later.",
 
   "promise.free.title": "Free, all of it",
   "promise.free.body":
@@ -178,6 +197,23 @@ const zh = {
   "nav.coverage": "支持的证件",
   "nav.about": "要多少钱",
   "nav.back": "返回",
+  "nav.home": "首页",
+  "nav.account": "账户",
+
+  "account.title": "账户",
+  "account.lede":
+    "可选，而且不会解锁这里的任何功能。账户用于把积分带到我们的其他应用；本站的一切始终免费。",
+  "account.signin.title": "登录 OpenPhotoId",
+  "account.signin.body": "一个账户通用于我们的各个应用。这里并不需要它——本站没有任何功能需要登录。",
+  "account.free.title": "这里没有任何功能需要账户",
+  "account.free.body":
+    "所有功能都在你自己的设备上运行，我们每张照片的成本是零，也就没有可收费的东西。无论是否登录，功能全都可用，且没有次数限制。",
+  "account.private.title": "你的照片依然与此无关",
+  "account.private.body":
+    "登录只会把邮箱地址或钱包签名发送到我们的账户服务器，除此之外没有别的。前后都不会上传照片——依然没有任何服务器会接收照片。",
+  "account.loading": "正在加载账户工具……",
+  "account.offline.title": "无法连接账户服务器",
+  "account.offline.body": "本站其余功能都不依赖账户，可以照常使用。请稍后再试。",
 
   "promise.free.title": "全部免费",
   "promise.free.body":

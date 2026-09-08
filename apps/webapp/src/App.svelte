@@ -8,13 +8,22 @@
   import Batch from "./views/Batch.svelte";
   import Coverage from "./views/Coverage.svelte";
   import About from "./views/About.svelte";
+  import Account from "./views/Account.svelte";
+  import { isSignInReturn, isConsumedSignInReturn } from "$lib/openapps.js";
 
   /*
     A hash router in twenty lines rather than a routing library. The app
     has six screens and one of them holds all the state; anything more is
     a dependency that has to be kept current for no benefit here.
   */
-  let route = $state(parse(location.hash));
+  /*
+    The sign-in return overrides the hash. A provider sends the browser back
+    with the code in the fragment; this router would read `code=…` as a
+    route name, match nothing, and render Home, where nothing account-related
+    mounts and the code is never exchanged. Detected here, before a view is
+    chosen, because by then it is too late.
+  */
+  let route = $state(isSignInReturn() ? { name: "account", arg: "" } : parse(location.hash));
   function parse(hash) {
     const [name, arg] = hash.replace(/^#\/?/, "").split("/");
     return { name: name || "home", arg: arg ? decodeURIComponent(arg) : "" };
@@ -23,8 +32,25 @@
     location.hash = arg ? `#/${name}/${encodeURIComponent(arg)}` : `#/${name}`;
   }
 
+  // The SDK deletes the code from the fragment once exchanged, which fires
+  // hashchange with an empty hash; the first such change after a return is
+  // rewritten to the account route rather than followed to Home.
+  let holdAccount = isSignInReturn();
   $effect(() => {
-    const on = () => (route = parse(location.hash));
+    const on = () => {
+      if (isSignInReturn()) {
+        holdAccount = true;
+        route = { name: "account", arg: "" };
+        return;
+      }
+      if (holdAccount && isConsumedSignInReturn()) {
+        holdAccount = false;
+        location.hash = "#/account";
+        return;
+      }
+      holdAccount = false;
+      route = parse(location.hash);
+    };
     addEventListener("hashchange", on);
     return () => removeEventListener("hashchange", on);
   });
@@ -57,6 +83,19 @@
     </button>
   {/if}
 
+  <!-- The account lives here and only here: a round, icon-only control, top
+       right, reachable from every screen. It navigates to its own route
+       rather than opening a panel in place. -->
+  <button
+    class="linkish account"
+    class:on={route.name === "account"}
+    onclick={() => go("account")}
+    aria-label={$t("nav.account")}
+    title={$t("nav.account")}
+  >
+    <Icon name="user" size={18} />
+  </button>
+
   <label class="lang">
     <Icon name="globe" size={15} />
     <span class="sr-only">Language</span>
@@ -86,6 +125,8 @@
     <Coverage {specs} />
   {:else if route.name === "about"}
     <About />
+  {:else if route.name === "account"}
+    <Account {go} />
   {:else}
     <Home {specs} {go} {setPicked} />
   {/if}
@@ -99,6 +140,16 @@
     cursor: pointer;
     padding: var(--space-1);
     display: inline-flex;
+  }
+  .account {
+    border-radius: var(--radius-full, 999px);
+  }
+  .account:hover,
+  .account.on {
+    color: var(--text-strong);
+  }
+  .account.on {
+    background: var(--surface-hover);
   }
   .lang {
     display: inline-flex;
