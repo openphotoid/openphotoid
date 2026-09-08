@@ -137,6 +137,22 @@ Serve it with compression.
 Screenshots of the built app are in [`screenshots/`](screenshots/),
 captured by `e2e/capture.mjs` driving the real UI rather than drawn by hand.
 
+## Phones and tablets
+
+The page is the phone app: installable from Safari or Chrome, front camera
+one tap away, models cached after the first visit. `#/diagnostics/run` runs
+the pipeline on a shipped sample and prints what the browser did, which is
+how the following was established on 8 September 2026:
+
+| Device | Result |
+|---|---|
+| iPhone, iOS 26.5 Safari (simulator) | works — CPU, 4 threads; WebGPU present but onnxruntime fell back |
+| Android 15, Chrome 124 (emulator, software GPU) | works — CPU, 3 threads, 4.9 s end to end |
+| iPhone and iPad, iOS 17.0 Safari (simulator) | **fails** — onnxruntime-web 1.29 cannot create a session ("Could not find OrtValue", "Failed to find args for kernel type"), at every optimisation level and with one thread. Versions between 17.0 and 26 are untested. |
+
+No real device has been tested yet; the simulators run on the Mac's CPU,
+so their timings say nothing about a phone's.
+
 ## Testing
 
 ```sh
