@@ -290,7 +290,7 @@ test.describe("offline and privacy", () => {
     // gist.github.com: a help link inside the vendored account bundle's
     // Nostr sign-in text. Text in a component, never a request.
     // The product's own hostnames are not third parties.
-    const allowed = /^(localhost|www\.w3\.org|schema\.org|svelte\.dev|gist\.github\.com|[a-z]+\.openphotoid\.com)$/;
+    const allowed = /^(localhost|www\.w3\.org|schema\.org|svelte\.dev|gist\.github\.com|github\.com|([a-z]+\.)?openphotoid\.com)$/;
     // onnxruntime-web's own chunks carry the CDN it would fetch its wasm
     // from by default. src/lib/ort.js points it at ./ort/ instead and the
     // "nothing is sent anywhere" test proves the CDN is never contacted,
