@@ -24,12 +24,48 @@ test.describe("home", () => {
 
   test("Simplified Chinese switches every string and survives a reload", async ({ page }) => {
     await page.goto("/");
-    await page.locator("header select").selectOption("zh-CN");
-    await expect(page.locator("h1")).toContainText(/[一-鿿]/);
-    await expect(page.locator("h1")).not.toContainText("Passport");
+    await page.locator("header select").selectOption("zh-Hans");
+    await expect(page.locator("main h1")).toContainText(/[一-鿿]/);
+    await expect(page.locator("main h1")).not.toContainText("Passport");
     await page.reload();
-    await expect(page.locator("h1")).toContainText(/[一-鿿]/);
-    expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-CN");
+    await expect(page.locator("main h1")).toContainText(/[一-鿿]/);
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-Hans");
+  });
+
+  // The static check proves the catalogues exist; this proves each one
+  // reaches the screen. The tagline differs in all eight, so it is the
+  // string asserted on — a near-collision like a shared "PNG" would not
+  // tell Spanish from Portuguese.
+  const TAGLINE = {
+    en: "Passport and ID photos that pass",
+    "zh-Hans": "在自己手机上做证件照",
+    "zh-Hant": "在自己的手機上做護照與證件相片",
+    ja: "自分のスマホで作る",
+    ko: "내 휴대폰으로 만드는",
+    de: "Pass- und Ausweisfotos, die angenommen werden",
+    es: "Fotos de pasaporte y de carnet que se aceptan",
+    pt: "Fotos de passaporte e documento que passam",
+  };
+  test("every offered language renders, and <html lang> follows the picker", async ({ page }) => {
+    await page.goto("/");
+    const offered = await page.locator("header select option").evaluateAll((os) => os.map((o) => o.value));
+    expect(offered.sort()).toEqual(Object.keys(TAGLINE).sort());
+    for (const [tag, tagline] of Object.entries(TAGLINE)) {
+      await page.locator("header select").selectOption(tag);
+      await expect(page.locator("main h1")).toContainText(tagline);
+      expect(await page.evaluate(() => document.documentElement.lang)).toBe(tag);
+    }
+    await page.reload();
+    await expect(page.locator("main h1")).toContainText(TAGLINE.pt);
+  });
+
+  test("a Traditional Chinese browser is handed Hant, not Hans", async ({ browser }) => {
+    const ctx = await browser.newContext({ locale: "zh-TW" });
+    const page = await ctx.newPage();
+    await page.goto("/");
+    await expect(page.locator("main h1")).toContainText(TAGLINE["zh-Hant"]);
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-Hant");
+    await ctx.close();
   });
 });
 
@@ -49,7 +85,7 @@ test.describe("picker and coverage", () => {
     await expect(rows).toHaveCount(1);
     await search.fill("zzzz");
     await expect(page.getByText(/Nothing matches/)).toBeVisible();
-    await page.locator("header select").selectOption("zh-CN");
+    await page.locator("header select").selectOption("zh-Hans");
     await search.fill("美国");
     await expect(rows).toHaveCount(us);
   });

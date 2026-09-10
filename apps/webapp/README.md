@@ -190,7 +190,7 @@ looks built and every photo then fails to load.
 | `src/lib/pipeline.js` | the sequence: which Rust call, which model run, in what order |
 | `src/lib/ort.js` | runtime selection and the WebGPU→CPU fallback |
 | `src/lib/models.js` | weight fetching, caching, progress |
-| `src/lib/i18n.js` | English and Simplified Chinese |
+| `src/lib/i18n.js`, `src/lib/i18n/*.js` | Eight languages: English, 简体中文, 繁體中文, 日本語, 한국어, Deutsch, Español, Português. Script subtags on Chinese; a `zh-TW` browser is handed Hant. `npm run check:i18n` (also part of the build) fails on any catalogue gap, and the e2e suite asserts each one reaches the screen |
 | `src/views/` | the six screens |
 | `src/ui/` | local primitives — see `Icon.svelte` for why the design kit's is not used |
 | `scripts/` | wasm build, model fetch, site assembly |

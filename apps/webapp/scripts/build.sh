@@ -20,6 +20,10 @@ log "Fetching the ONNX weights"
 bash "$SCRIPT_DIR/fetch-models.sh"
 
 log "Bundling the app"
+# The catalogues are checked before the bundle is built: a locale in the
+# picker with a gap in its catalogue would otherwise fall back to English
+# silently, and nothing at runtime would say so.
+(cd "$WEBAPP_DIR" && node scripts/check-i18n.mjs)
 (cd "$WEBAPP_DIR" && npx vite build)
 
 [ -f "$DIST/index.html" ] || { echo "build.sh: vite produced no index.html" >&2; exit 1; }
