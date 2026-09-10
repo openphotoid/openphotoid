@@ -8,6 +8,7 @@
     "build": "bash scripts/build.sh",
     "dev": "vite",
     "preview": "vite preview --port 8082",
+    "check:i18n": "node scripts/check-i18n.mjs",
     "e2e": "playwright test",
     "serve": "node e2e/server.mjs",
     "screenshots": "node e2e/capture.mjs screenshots",

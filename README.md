@@ -51,7 +51,7 @@ credentials only the project owner should hold).
 - `crates/frame-wasm` — wasm-bindgen bindings that run the whole pipeline in a browser; JS supplies only the ONNX forward pass
 - `crates/frame-license` — Ed25519 scaffold (all features currently ungated)
 - `apps/desktop` — Tauri 2 + Svelte: single-photo compliance flow (drag-drop → spec → before/after → checklist → download), an update-check button (`tauri-plugin-updater`), plus the M0 canvas-perf spike as a second tab
-- `apps/webapp` — the browser build: mobile-first, English + Simplified Chinese, installable, works offline after the first visit
+- `apps/webapp` — the browser build: mobile-first, eight languages (English, Simplified and Traditional Chinese, Japanese, Korean, German, Spanish, Portuguese), installable, works offline after the first visit
 - `data/specs` — country/document photo specs (JSON, mm-first, sourced + dated)
 
 ## Build

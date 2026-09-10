@@ -79,7 +79,8 @@ export function matches(spec, query, locale) {
     spec.document,
     countryName(spec.country, locale),
     countryName(spec.country, "en"),
-    countryName(spec.country, "zh-CN"),
+    countryName(spec.country, "zh-Hans"),
+    countryName(spec.country, "zh-Hant"),
   ]
     .join(" ")
     .toLowerCase();

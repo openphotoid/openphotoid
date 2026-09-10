@@ -80,10 +80,17 @@ for (const [scheme, tag] of [["light", ""], ["dark", "-dark"]]) {
     await page.locator("tbody tr").nth(20).waitFor();
     await shoot(page, "07-coverage", { fullPage: true });
 
-    await page.goto(`${base}/`);
-    await page.locator("header select").selectOption("zh-CN");
-    await page.getByText(/个/).first().waitFor();
-    await shoot(page, "08-home-zh");
+    // One home screen per language the picker offers, so the guide shows
+    // each catalogue on the page rather than in a file.
+    for (const [tag, probe] of [
+      ["zh-Hans", /个/], ["zh-Hant", /種/], ["ja", /種類/], ["ko", /종/],
+      ["de", /Dokumente/], ["es", /documentos/], ["pt", /documentos/],
+    ]) {
+      await page.goto(`${base}/`);
+      await page.locator("header select").selectOption(tag);
+      await page.getByText(probe).first().waitFor();
+      await shoot(page, tag === "zh-Hans" ? "08-home-zh" : `08-home-${tag}`);
+    }
     await page.locator("header select").selectOption("en");
 
     await page.goto(`${base}/`);
