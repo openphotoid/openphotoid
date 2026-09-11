@@ -3,22 +3,39 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>OpenPhotoId — free passport &amp; ID photos, in your browser</title>
-    <meta
-      name="description"
-      content="Make a compliant passport, visa or ID photo in about a minute. Every size, every check, free forever — and your photo never leaves your device."
-    />
-    <meta name="theme-color" content="#f2f2f2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
-    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="OpenPhotoId" />
+    <meta name="robots" content="noindex" />
+    <title>OpenPhotoId — the app</title>
+    <!-- The app, on its own: for development, and as the half the site repo
+         composes around. openphotoid.com is one document — this app with the
+         product page around it — and the page lives in the private site repo.
+         It takes everything from the app-head marker to the end of this head,
+         and everything between app:begin and app:end.
+
+         The tokens sit ABOVE the marker deliberately. The page links its own
+         copy, so anything above the marker is not carried across and cannot
+         ship twice; below it goes what is the app's alone, which here is
+         whatever Vite injects. -->
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./tokens/css/colors.css" />
+    <link rel="stylesheet" href="./tokens/css/typography.css" />
+    <link rel="stylesheet" href="./tokens/css/spacing.css" />
+    <link rel="stylesheet" href="./tokens/css/radius.css" />
+    <link rel="stylesheet" href="./tokens/css/motion.css" />
+    <link rel="stylesheet" href="./tokens/css/fonts.css" />
+    <!-- app-head -->
   </head>
   <body>
+    <!-- Not the site header: a slot, so the app's account and language
+         controls have somewhere to go when it runs on its own. On the landing
+         route the app moves them out of its own bar into this slot (see
+         `use:portal` in App.svelte), and on the composed page the real site
+         header carries the same id. Without it here, running the app alone
+         would silently lose both controls on that route. -->
+    <div id="app-controls-slot" style="display:flex;justify-content:flex-end;padding:8px 16px"></div>
+
+    <!-- app:begin -->
     <div id="app"></div>
+    <!-- app:end -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
