@@ -17,6 +17,10 @@ env:
 jobs:
   android:
     runs-on: ubuntu-latest
+    # The `secrets` context cannot be read in a step's `if`; an env
+    # mapping can, and an unset secret is the empty string there.
+    env:
+      ANDROID_UPLOAD_KEYSTORE_B64: "${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}"
     steps:
       - uses: actions/checkout@v4
         with: { ref: "${{ inputs.version || github.ref_name }}" }
@@ -53,9 +57,9 @@ jobs:
       # A Play-ready App Bundle, only when the upload key is in the repo's
       # secrets (base64 of the .jks, plus its password). Without them the
       # step is skipped and the RC carries the debug-signed APK alone.
-      - if: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 != '' }}
+      - if: ${{ env.ANDROID_UPLOAD_KEYSTORE_B64 != '' }}
         env:
-          KS: "${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}"
+          KS: "${{ env.ANDROID_UPLOAD_KEYSTORE_B64 }}"
           KSPW: "${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}"
           NDK_HOME: "${{ env.ANDROID_HOME }}/ndk/27.0.12077973"
         run: |
