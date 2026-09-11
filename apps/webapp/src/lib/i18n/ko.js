@@ -44,6 +44,8 @@ export default {
   "promise.private.body": "이 브라우저 탭 안에서 처리됩니다. 업로드할 서버가 없으니 업로드되는 일도 없습니다.",
   "promise.offline.title": "신호가 없어도 됩니다",
   "promise.offline.body": "첫 방문 후에는 모든 것이 기기에 저장됩니다. 홈 화면에 추가하면 비행기 안에서도 열립니다.",
+  "promise.private.body.native": "이 휴대폰 안에서 처리됩니다. 업로드할 서버가 없으니 업로드되는 일도 없습니다.",
+  "promise.offline.body.native": "모든 것이 이 휴대폰에 저장되어 있어 신호가 없어도, 비행기 안에서도 동작합니다.",
   "promise.offline.ready": "오프라인 사용 준비 완료",
 
   "home.start": "사진 선택",

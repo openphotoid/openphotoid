@@ -44,6 +44,8 @@ export default {
   "promise.private.body": "Se procesa dentro de esta pestaña del navegador. Nunca se sube, porque no hay ningún servidor al que subirla.",
   "promise.offline.title": "Funciona sin cobertura",
   "promise.offline.body": "Tras la primera visita todo queda guardado en tu dispositivo. Añádelo a la pantalla de inicio y se abre hasta en un avión.",
+  "promise.private.body.native": "Se procesa en este móvil. Nunca se sube, porque no hay ningún servidor al que subirla.",
+  "promise.offline.body.native": "Todo está guardado en este móvil, así que funciona sin cobertura, también en un avión.",
   "promise.offline.ready": "Listo para funcionar sin conexión",
 
   "home.start": "Elegir una foto",

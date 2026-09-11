@@ -97,7 +97,7 @@ pub fn validate(output: &Frame, faces: &[Face], spec: &PhotoSpec) -> ValidationR
     checks.push(eye_line_check(output, face, spec));
     checks.push(centering_check(output, face, spec));
     checks.push(roll_check(face, spec));
-    checks.push(inter_eye_distance_check(face));
+    checks.push(inter_eye_distance_check(output, face, spec));
     checks.push(blur_check(output, face));
     checks.push(lighting_symmetry_check(output, face));
     checks.push(background_uniformity_check(output, Some(face), spec));
@@ -210,20 +210,47 @@ fn roll_check(face: &Face, spec: &PhotoSpec) -> CheckResult {
     }
 }
 
-fn inter_eye_distance_check(face: &Face) -> CheckResult {
+/// The minimum is a hard rule. The recommendation is only a caution when
+/// the document could actually meet it: at 600×600 with the head cropped
+/// to the middle of a 50–69% band, the eyes sit about 100 px apart however
+/// well the photo was taken, so "recommended 120" cautioned every
+/// compliant crop of every document (found on the reference portrait,
+/// 11 September 2026). The reachable distance is what this face's eyes
+/// span at the head size the automatic crop aims for — the middle of the
+/// band, which is where every photo lands unless someone drags the
+/// slider; a recommendation above it is stated, not warned.
+fn inter_eye_distance_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> CheckResult {
     let e = face.landmarks;
     let ied = ((e[1][0] - e[0][0]).powi(2) + (e[1][1] - e[0][1]).powi(2)).sqrt();
-    let status = if ied >= IED_RECOMMENDED_PX {
-        Status::Pass
-    } else if ied >= IED_MIN_PX {
-        Status::Warn
+    let head_h = estimate_head_height(face);
+    let head_mid = (spec.face.head_min_pct + spec.face.head_max_pct) / 2.0;
+    let reachable = if head_h > 0.0 {
+        ied / head_h * head_mid * output.height() as f32
     } else {
-        Status::Fail
+        ied
+    };
+    let (status, detail) = if ied < IED_MIN_PX {
+        (Status::Fail, format!("{ied:.0}px (min {IED_MIN_PX:.0})"))
+    } else if ied >= IED_RECOMMENDED_PX {
+        (
+            Status::Pass,
+            format!("{ied:.0}px (min {IED_MIN_PX:.0}, recommended {IED_RECOMMENDED_PX:.0})"),
+        )
+    } else if reachable >= IED_RECOMMENDED_PX {
+        (
+            Status::Warn,
+            format!("{ied:.0}px (min {IED_MIN_PX:.0}, recommended {IED_RECOMMENDED_PX:.0})"),
+        )
+    } else {
+        (
+            Status::Pass,
+            format!("{ied:.0}px (min {IED_MIN_PX:.0}; {IED_RECOMMENDED_PX:.0} is recommended at larger output sizes)"),
+        )
     };
     CheckResult {
         name: "inter_eye_distance",
         status,
-        detail: format!("{ied:.0}px (min {IED_MIN_PX:.0}, recommended {IED_RECOMMENDED_PX:.0})"),
+        detail,
     }
 }
 
@@ -592,6 +619,60 @@ mod tests {
             let c = report.checks.iter().find(|c| c.name == name).unwrap();
             assert_eq!(c.status, Status::Pass, "{name}: {}", c.detail);
         }
+    }
+
+    #[test]
+    fn inter_eye_recommendation_only_cautions_where_the_document_can_meet_it() {
+        // A real face spans about 0.29 head heights between the eyes; the
+        // synthetic face is wider, so the eyes are placed by hand.
+        fn face_with(cx: f32, cy: f32, head_h: f32, ied: f32) -> Face {
+            let mut f = synthetic_face(cx, cy, head_h, 0.0);
+            f.landmarks[0][0] = cx - ied / 2.0;
+            f.landmarks[1][0] = cx + ied / 2.0;
+            f
+        }
+        let spec = spec_fixture();
+        let mid = (spec.face.head_min_pct + spec.face.head_max_pct) / 2.0;
+
+        // 600×600, head at the middle of the band, eyes 100 px apart: the
+        // automatic crop can never reach 120 here, so it is a pass that
+        // states the recommendation rather than a caution.
+        let (w, h) = (600u32, 600u32);
+        let output = Frame::new(RgbaImage::from_pixel(w, h, Rgba([255, 255, 255, 255])));
+        let face = face_with(300.0, h as f32 * (1.0 - 0.62), h as f32 * mid, 100.0);
+        let report = validate(&output, &[face], &spec);
+        let c = report
+            .checks
+            .iter()
+            .find(|c| c.name == "inter_eye_distance")
+            .unwrap();
+        assert_eq!(c.status, Status::Pass, "{}", c.detail);
+        assert!(c.detail.contains("larger output"), "{}", c.detail);
+
+        // 1200×1200 with the head well under the band's middle: the crop
+        // the app aims for would enlarge it past 120 px, so 100 px here is
+        // a caution (the head-height check objects too; only this one is
+        // asserted).
+        let (w, h) = (1200u32, 1200u32);
+        let output = Frame::new(RgbaImage::from_pixel(w, h, Rgba([255, 255, 255, 255])));
+        let face = face_with(600.0, h as f32 * (1.0 - 0.62), h as f32 * 0.45, 100.0);
+        let report = validate(&output, &[face], &spec);
+        let c = report
+            .checks
+            .iter()
+            .find(|c| c.name == "inter_eye_distance")
+            .unwrap();
+        assert_eq!(c.status, Status::Warn, "{}", c.detail);
+
+        // Below the minimum is a failure at any size.
+        let face = face_with(600.0, h as f32 * (1.0 - 0.62), h as f32 * 0.45, 80.0);
+        let report = validate(&output, &[face], &spec);
+        let c = report
+            .checks
+            .iter()
+            .find(|c| c.name == "inter_eye_distance")
+            .unwrap();
+        assert_eq!(c.status, Status::Fail, "{}", c.detail);
     }
 
     #[test]

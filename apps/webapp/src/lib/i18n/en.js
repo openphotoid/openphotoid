@@ -50,6 +50,8 @@ export default {
   "promise.offline.title": "Works with no signal",
   "promise.offline.body":
     "After the first visit everything is stored on your device. Add it to your home screen and it opens on a plane.",
+  "promise.private.body.native": "It is processed on this phone. It is never uploaded, because there is no server to upload it to.",
+  "promise.offline.body.native": "Everything is stored on this phone, so it works with no signal — on a plane included.",
   "promise.offline.ready": "Ready to work offline",
 
   "home.start": "Choose a photo",

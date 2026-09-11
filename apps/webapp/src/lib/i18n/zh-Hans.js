@@ -46,6 +46,8 @@ export default {
   "promise.private.body": "全部在这个浏览器标签页里处理。不会上传——因为根本没有可上传的服务器。",
   "promise.offline.title": "没网也能用",
   "promise.offline.body": "第一次打开之后就都存在你的设备上。加到桌面，在飞机上也能开。",
+  "promise.private.body.native": "全部在这台手机上处理。不会上传——因为根本没有可上传的服务器。",
+  "promise.offline.body.native": "所有东西都存在这台手机上，没网也能用，在飞机上也一样。",
   "promise.offline.ready": "已可离线使用",
 
   "home.start": "选一张照片",

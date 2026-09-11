@@ -31,3 +31,6 @@ apps/mobile/src-tauri/gen/apple/Externals/
 apps/mobile/src-tauri/gen/apple/*.xcodeproj/xcuserdata/
 apps/mobile/src-tauri/gen/apple/**/xcuserdata/
 apps/mobile/src-tauri/gen/android/buildSrc/.kotlin/
+
+# Store screenshots are generated (apps/webapp/e2e/capture-store.mjs), ~200 large PNGs.
+store/screenshots/

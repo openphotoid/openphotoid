@@ -45,6 +45,8 @@ export default {
   "promise.private.body": "全部在這個瀏覽器分頁裡處理。不會上傳——因為根本沒有可以上傳的伺服器。",
   "promise.offline.title": "沒有網路也能用",
   "promise.offline.body": "第一次開啟之後就都存在你的裝置上。加到主畫面，在飛機上也能開。",
+  "promise.private.body.native": "全部在這台手機上處理。不會上傳——因為根本沒有可以上傳的伺服器。",
+  "promise.offline.body.native": "所有東西都存在這台手機上，沒有網路也能用，在飛機上也一樣。",
   "promise.offline.ready": "已可離線使用",
 
   "home.start": "選一張相片",

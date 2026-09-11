@@ -44,6 +44,8 @@ export default {
   "promise.private.body": "Es wird in diesem Browser-Tab verarbeitet. Es wird nie hochgeladen, weil es keinen Server gibt, auf den man es hochladen könnte.",
   "promise.offline.title": "Funktioniert ohne Empfang",
   "promise.offline.body": "Nach dem ersten Besuch ist alles auf Ihrem Gerät gespeichert. Zum Startbildschirm hinzufügen, und es öffnet sich auch im Flugzeug.",
+  "promise.private.body.native": "Es wird auf diesem Telefon verarbeitet. Es wird nie hochgeladen, weil es keinen Server gibt, auf den man es hochladen könnte.",
+  "promise.offline.body.native": "Alles ist auf diesem Telefon gespeichert, also funktioniert es ohne Empfang – auch im Flugzeug.",
   "promise.offline.ready": "Bereit für den Offline-Betrieb",
 
   "home.start": "Foto auswählen",
