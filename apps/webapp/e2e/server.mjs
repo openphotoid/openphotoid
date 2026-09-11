@@ -11,7 +11,14 @@ import { createReadStream, statSync } from "node:fs";
 import { join, extname, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(fileURLToPath(new URL(".", import.meta.url)), "..", "dist");
+// `SITE_ROOT` serves the composed site — the product page from the private
+// site repo with this app inside it — instead of the app's bare `dist/`.
+// After the website moved out, `dist/index.html` is a shell: it has the app
+// and none of the copy the suite asserts on, so a plain run here would be
+// testing a page nobody is served. `deploy.sh` in the site repo sets it.
+const root = process.env.SITE_ROOT
+  ? process.env.SITE_ROOT
+  : join(fileURLToPath(new URL(".", import.meta.url)), "..", "dist");
 const port = Number(process.env.PORT ?? 5199);
 const coi = process.env.COI === "1";
 
