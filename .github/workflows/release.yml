@@ -50,6 +50,21 @@ jobs:
           "$bt/apksigner" sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out "dist/OpenPhotoId-${VERSION}.apk" aligned.apk
           "$bt/apksigner" verify "dist/OpenPhotoId-${VERSION}.apk"
           (cd dist && sha256sum "OpenPhotoId-${VERSION}.apk" > "OpenPhotoId-${VERSION}.apk.sha256")   # bare name, so `shasum -c` works on a download
+      # A Play-ready App Bundle, only when the upload key is in the repo's
+      # secrets (base64 of the .jks, plus its password). Without them the
+      # step is skipped and the RC carries the debug-signed APK alone.
+      - if: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 != '' }}
+        env:
+          KS: "${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}"
+          KSPW: "${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}"
+          NDK_HOME: "${{ env.ANDROID_HOME }}/ndk/27.0.12077973"
+        run: |
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/upload-keystore.jks"
+          printf 'storeFile=%s\nstorePassword=%s\nkeyAlias=upload\nkeyPassword=%s\n' "$RUNNER_TEMP/upload-keystore.jks" "$KSPW" "$KSPW" > apps/mobile/src-tauri/gen/android/keystore.properties
+          npm --prefix apps/mobile run tauri -- android build --aab
+          cp apps/mobile/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab "dist/OpenPhotoId-${VERSION}.aab"
+          (cd dist && sha256sum "OpenPhotoId-${VERSION}.aab" > "OpenPhotoId-${VERSION}.aab.sha256")
+          rm -f apps/mobile/src-tauri/gen/android/keystore.properties "$RUNNER_TEMP/upload-keystore.jks"
       - uses: actions/upload-artifact@v4
         with: { name: android, path: dist/ }
   ios:
@@ -120,6 +135,6 @@ jobs:
       - run: find artifacts -type f | sort
       # --prerelease: an RC must never become the "Latest" download.
       - run: |
-          files=$(find artifacts -type f \( -name "*.apk" -o -name "*.sha256" -o -name "*.ipa" -o -name "*.dmg" -o -name "*.msi" -o -name "*.exe" \) | tr '\n' ' ')
+          files=$(find artifacts -type f \( -name "*.apk" -o -name "*.aab" -o -name "*.sha256" -o -name "*.ipa" -o -name "*.dmg" -o -name "*.msi" -o -name "*.exe" \) | tr '\n' ' ')
           gh release create "$VERSION" $files --prerelease --title "OpenPhotoId $VERSION" --notes-file .github/release-notes.md --repo "$GITHUB_REPOSITORY" || gh release upload "$VERSION" $files --clobber --repo "$GITHUB_REPOSITORY"
         env: { GH_TOKEN: "${{ github.token }}" }

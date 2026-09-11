@@ -36,6 +36,9 @@ targets:
         buildPhase: resources
         type: folder
       - path: LaunchScreen.storyboard
+      # App Store privacy manifest: must sit at the bundle root.
+      - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
     info:
       path: openphotoid-mobile_iOS/Info.plist
       properties:
@@ -53,6 +56,14 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         CFBundleShortVersionString: 0.1.0
         CFBundleVersion: "0.1.0"
+        # Usage strings live here, not in Info.plist: xcodegen rewrites
+        # that file from this one, and a hand edit there was lost once.
+        NSCameraUsageDescription: Take a photo for your passport or ID picture. It is processed on this device and never uploaded.
+        NSPhotoLibraryUsageDescription: Choose a photo for your passport or ID picture. It is processed on this device and never uploaded.
+        NSPhotoLibraryAddUsageDescription: Save the finished photo to your library.
+        # Export compliance: only HTTPS, no proprietary cryptography, so
+        # App Store Connect need not ask on every build.
+        ITSAppUsesNonExemptEncryption: false
     entitlements:
       path: openphotoid-mobile_iOS/openphotoid-mobile_iOS.entitlements
     scheme:

@@ -1,0 +1,11 @@
+{
+ "appstore_locale": "en-US",
+ "play_locale": "en-US",
+ "name": "OpenPhotoId",
+ "subtitle": "ID photos that pass",
+ "short_description": "Passport and ID photos to the official rules. Free, on-device, never uploaded.",
+ "promotional_text": "Pick the country, take or choose a photo, save a file that meets the official size, background and head-position rules. Free, no account, nothing uploaded.",
+ "keywords": "passport photo,ID photo,visa photo,biometric photo,license photo,photo size,white background",
+ "description": "Pick the country and the document. Take a photo or choose one. OpenPhotoId finds your face, separates you from whatever was behind you, paints the background the document requires, crops to the official head and eye positions, and checks the result against the rules before you save it.\n\nWHAT YOU GET\n• A JPEG at the exact pixel size and file size the online form asks for.\n• A PNG with no compression loss.\n• A print sheet (4×6\", 5×7\", A4 or Letter) with cutting guides, for a photo shop.\n\nWHAT IT CHECKS\nFace count, head height, eye line, centering, roll, inter-eye distance, blur, lighting symmetry, background uniformity, resolution and file size. Each check shows the measured value and the allowed range, so you know why a photo passes or does not.\n\nDOCUMENTS\n21 documents from 14 countries and regions, each with the official source its rules came from and the date they were last checked. The list is in the app under \"Documents covered\".\n\nFREE, ALL OF IT\nEvery feature. No account, no trial, no watermark, and no step where a price appears after you have done the work. The features other apps charge for — hair-level edge detail, unlimited batches, backgrounds beyond flat colour, print sharpening, a drawn jacket — are all here, and each one explains how it actually works.\n\nYOUR PHOTO STAYS ON YOUR DEVICE\nThe whole pipeline runs on the phone. There is no server to upload to, so nothing is uploaded, before or after. Closing the app is all the deletion there is to do.\n\nEIGHT LANGUAGES\nEnglish, 简体中文, 繁體中文, 日本語, 한국어, Deutsch, Español, Português.\n\nOpen source, MIT or Apache-2.0. Source and privacy policy at openphotoid.com.",
+ "whats_new": "First release: 21 documents from 14 countries and regions, eight languages, everything on the device."
+}

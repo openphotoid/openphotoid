@@ -1,5 +1,6 @@
 <script>
   import { t } from "$lib/i18n.js";
+  import { looksNative } from "$lib/platform.js";
   import { readyOffline } from "$lib/models.js";
   import Button from "$ui/Button.svelte";
   import Icon from "$ui/Icon.svelte";
@@ -72,7 +73,7 @@
       <Icon name="shield" size={17} />
       <div>
         <strong>{$t("promise.private.title")}</strong>
-        <p class="tiny">{$t("promise.private.body")}</p>
+        <p class="tiny">{$t(looksNative ? "promise.private.body.native" : "promise.private.body")}</p>
       </div>
     </li>
     <li>
@@ -82,7 +83,7 @@
           {$t("promise.offline.title")}
           {#if offlineReady}<span class="free-tag">{$t("promise.offline.ready")}</span>{/if}
         </strong>
-        <p class="tiny">{$t("promise.offline.body")}</p>
+        <p class="tiny">{$t(looksNative ? "promise.offline.body.native" : "promise.offline.body")}</p>
       </div>
     </li>
   </ul>

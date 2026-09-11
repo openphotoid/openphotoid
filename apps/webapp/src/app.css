@@ -139,3 +139,9 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+/* Inside the phone apps the site copy that shares this document is not
+   shown: the app is the whole screen. platform.js sets the attribute. */
+html[data-native] .site-chrome {
+  display: none;
+}

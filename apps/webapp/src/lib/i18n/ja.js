@@ -44,6 +44,8 @@ export default {
   "promise.private.body": "このブラウザのタブの中で処理されます。アップロード先のサーバーが存在しないので、アップロードされることはありません。",
   "promise.offline.title": "圏外でも使える",
   "promise.offline.body": "初回アクセス後はすべて端末に保存されます。ホーム画面に追加すれば、機内でも開けます。",
+  "promise.private.body.native": "この端末の中で処理されます。アップロード先のサーバーが存在しないので、アップロードされることはありません。",
+  "promise.offline.body.native": "すべて端末に保存されているので、圏外でも、機内でも使えます。",
   "promise.offline.ready": "オフラインで使えます",
 
   "home.start": "写真を選ぶ",

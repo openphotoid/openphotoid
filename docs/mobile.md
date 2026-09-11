@@ -13,7 +13,7 @@ app at app.openphotoid.com is the first surface, not the destination.
 | **Android app** | **Built and verified.** Same crate, universal APK. Android 15 emulator: "native · tract · 4 threads", about 3.5 s. Debug-signed APK installs and runs; the release workflow signs the same way. |
 | Desktop | Tauri 2 + Svelte, `apps/desktop`, unsigned bundles. |
 | Release candidate | **`v0.1.0-rc.2` is on the [releases page](https://github.com/openphotoid/openphotoid/releases)** (8 September 2026): the debug-signed universal APK, the unsigned IPA, and the macOS and Windows bundles, built by `.github/workflows/release.yml` from the tag. `rc.1` proved the Android and desktop jobs; its iOS job failed on signing, fixed in rc.2 with the CLI's `--no-sign --archive-only`. The universal APK is 259 MB because it carries four ABIs; a Play submission uses an AAB, which Play splits per device. |
-| Store listings | Not started; step 6 below. |
+| Store listings | **Prepared, 11 September 2026** (`store/README.md`): signed App Bundle with a Play upload key, App Store privacy manifest and usage strings, listing copy in all eight languages within each store's field limits, screenshots at both stores' required sizes per language, the review, privacy, data-safety and rating answers, and an upload script for App Store Connect. What remains needs the two accounts and is listed there under **You**. |
 
 Two things the phone builds taught, both fixed in the tree:
 
@@ -50,7 +50,7 @@ Android NDK 27, and the `aarch64-apple-ios`, `aarch64-apple-ios-sim`,
 
 ## The steps
 
-Steps 1–5 are done (8 September 2026). Step 6 waits for the accounts.
+Steps 1–5 are done (8 September 2026); step 6 is prepared as far as it can be without the accounts (11 September 2026, `store/README.md`).
 
 1. **Wire the tract MODNet into the registry.** `frame-engine::registry`
    gains the patched MODNet as the model the `tract-backend` feature loads,

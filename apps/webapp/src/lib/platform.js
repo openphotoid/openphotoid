@@ -10,6 +10,19 @@
 
 export const isNative = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
+// The document the phone apps package is the same one openphotoid.com
+// serves, marketing copy included ("runs in your browser", the GitHub
+// link). Inside an app that copy is wrong and a store review would say
+// so; app.css hides it on this attribute.
+if (isNative) document.documentElement.dataset.native = "";
+
+// Presentation only: true in the phone apps, and in a browser that was
+// told to look like one (the store-screenshot capture sets the attribute
+// before the page loads). Never used to choose a code path.
+export const looksNative =
+  isNative || (typeof document !== "undefined" && document.documentElement.hasAttribute("data-native"));
+
+
 let invokeFn;
 async function invoke(cmd, args) {
   invokeFn ??= (await import("@tauri-apps/api/core")).invoke;

@@ -44,6 +44,8 @@ export default {
   "promise.private.body": "Ela é processada dentro desta aba do navegador. Nunca é enviada, porque não existe servidor para onde enviar.",
   "promise.offline.title": "Funciona sem sinal",
   "promise.offline.body": "Depois da primeira visita, tudo fica guardado no seu aparelho. Adicione à tela inicial e ele abre até no avião.",
+  "promise.private.body.native": "Ela é processada neste celular. Nunca é enviada, porque não existe servidor para onde enviar.",
+  "promise.offline.body.native": "Tudo fica guardado neste celular, então funciona sem sinal, inclusive no avião.",
   "promise.offline.ready": "Pronto para funcionar offline",
 
   "home.start": "Escolher uma foto",
