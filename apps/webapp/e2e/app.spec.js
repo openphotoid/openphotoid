@@ -10,25 +10,35 @@ const CHECKS = [
 ];
 
 test.describe("home", () => {
+  // The app shares this document with the marketing page, and the page repeats
+  // several of the app's own sentences — deliberately, since both make the same
+  // promises. Assertions about what the *app* renders are scoped to `#app`;
+  // unscoped they also match the copy above and below it and fail on a strict-
+  // mode violation that says nothing about the app.
   test("opens on the promise and the coverage count", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("h1")).toContainText("Passport and ID photos that pass");
-    await expect(page.getByText(`${SPEC_COUNT} documents from`)).toBeVisible();
+    await expect(page.locator("#app").getByText(`${SPEC_COUNT} documents from`)).toBeVisible();
     await expect(page.locator("header .brand")).toHaveText(/OpenPhotoId/);
     for (const promise of ["Free, all of it", "Your photo stays here", "Works with no signal"]) {
-      await expect(page.getByText(promise, { exact: true })).toBeVisible();
+      await expect(page.locator("#app").getByText(promise, { exact: true })).toBeVisible();
     }
     // Nothing on the product's pages names the platform.
     await expect(page.locator("body")).not.toContainText("OpenApps");
   });
 
+  // `main :is(h1, h2.h1)` rather than `main h1`: the app's home view titles
+  // itself with an `h2` now. It shares this document with the marketing page,
+  // whose hero carries the page's one `h1`, and two of them left the document
+  // with no outline. The locator means "the view's title", which is what every
+  // assertion using it is actually about.
   test("Simplified Chinese switches every string and survives a reload", async ({ page }) => {
     await page.goto("/");
     await page.locator("header select").selectOption("zh-Hans");
-    await expect(page.locator("main h1")).toContainText(/[一-鿿]/);
-    await expect(page.locator("main h1")).not.toContainText("Passport");
+    await expect(page.locator("main :is(h1, h2.h1)")).toContainText(/[一-鿿]/);
+    await expect(page.locator("main :is(h1, h2.h1)")).not.toContainText("Passport");
     await page.reload();
-    await expect(page.locator("main h1")).toContainText(/[一-鿿]/);
+    await expect(page.locator("main :is(h1, h2.h1)")).toContainText(/[一-鿿]/);
     expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-Hans");
   });
 
@@ -52,18 +62,18 @@ test.describe("home", () => {
     expect(offered.sort()).toEqual(Object.keys(TAGLINE).sort());
     for (const [tag, tagline] of Object.entries(TAGLINE)) {
       await page.locator("header select").selectOption(tag);
-      await expect(page.locator("main h1")).toContainText(tagline);
+      await expect(page.locator("main :is(h1, h2.h1)")).toContainText(tagline);
       expect(await page.evaluate(() => document.documentElement.lang)).toBe(tag);
     }
     await page.reload();
-    await expect(page.locator("main h1")).toContainText(TAGLINE.pt);
+    await expect(page.locator("main :is(h1, h2.h1)")).toContainText(TAGLINE.pt);
   });
 
   test("a Traditional Chinese browser is handed Hant, not Hans", async ({ browser }) => {
     const ctx = await browser.newContext({ locale: "zh-TW" });
     const page = await ctx.newPage();
     await page.goto("/");
-    await expect(page.locator("main h1")).toContainText(TAGLINE["zh-Hant"]);
+    await expect(page.locator("main :is(h1, h2.h1)")).toContainText(TAGLINE["zh-Hant"]);
     expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-Hant");
     await ctx.close();
   });
@@ -92,12 +102,12 @@ test.describe("picker and coverage", () => {
 
   test("the coverage page lists every spec with its source and check date", async ({ page }) => {
     await page.goto("/#/coverage");
-    const rows = page.locator("tbody tr");
+    const rows = page.locator("#app tbody tr");
     await expect(rows).toHaveCount(SPEC_COUNT);
-    await expect(page.locator('a:has-text("Official source")')).toHaveCount(SPEC_COUNT);
+    await expect(page.locator('#app a:has-text("Official source")')).toHaveCount(SPEC_COUNT);
     await expect(rows.filter({ hasText: /600\s*×\s*600/ }).first()).toBeVisible();
     // Every source link opens elsewhere without handing the page a referrer.
-    const rels = await page.locator("tbody a").evaluateAll((as) => as.map((a) => a.rel));
+    const rels = await page.locator("#app tbody a").evaluateAll((as) => as.map((a) => a.rel));
     expect(rels.every((r) => r.includes("noreferrer"))).toBe(true);
   });
 });
@@ -250,9 +260,9 @@ test.describe("offline and privacy", () => {
     await context.setOffline(true);
     await page.reload();
     await expect(page.locator("h1")).toContainText("Passport and ID photos that pass");
-    await expect(page.getByText(`${SPEC_COUNT} documents from`)).toBeVisible();
+    await expect(page.locator("#app").getByText(`${SPEC_COUNT} documents from`)).toBeVisible();
     await page.goto("/#/coverage");
-    await expect(page.locator("tbody tr")).toHaveCount(SPEC_COUNT);
+    await expect(page.locator("#app tbody tr")).toHaveCount(SPEC_COUNT);
     await context.setOffline(false);
   });
 
@@ -369,7 +379,7 @@ test.describe("the account", () => {
     await page.waitForURL(/#\/account/);
     await expect(page.getByTestId("account-panel")).toBeVisible({ timeout: 30_000 });
     await expect(page.getByText(/Could not reach/)).toHaveCount(0);
-    await expect(page.getByText(/unlocks nothing/)).toBeVisible();
+    await expect(page.locator("#app").getByText(/unlocks nothing/)).toBeVisible();
     expect(requests.some((u) => u.startsWith(AUTH_HOST))).toBe(true);
     expect(requests.filter((u) => /openapps\.network/.test(u))).toEqual([]);
     // Visible text, shadow roots included: the default heading lives inside

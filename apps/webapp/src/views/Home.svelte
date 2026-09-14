@@ -26,7 +26,11 @@
 
 <div class="stack-lg" style="padding-top:var(--space-6)">
   <div class="hero">
-    <h1>{$t("app.tagline")}</h1>
+    <!-- `h2`, not `h1`. This view shares a document with the marketing page,
+         whose hero already carries the page's `h1`; two of them left the page
+         with no outline for a screen reader or a crawler. The class keeps the
+         type it had — level is an outline question, not a type question. -->
+    <h2 class="h1">{$t("app.tagline")}</h2>
     <p class="oa-lead">{$t("app.sub")}</p>
   </div>
 
@@ -107,7 +111,12 @@
 </div>
 
 <style>
-  .hero h1 {
+  /* `h2.h1` as well: the title is an `h2` now (see the markup), and the
+     global sheet sizes headings by tag, so the class carries the type back. */
+  .hero h1,
+  .hero h2.h1 {
+    font: var(--type-h1);
+    color: var(--text-strong);
     text-wrap: balance;
     margin-bottom: var(--space-3);
   }
@@ -122,6 +131,17 @@
     gap: var(--space-3);
     align-items: flex-start;
     color: var(--text-muted);
+  }
+  /* A fixed box for every glyph, so the three titles start on one line
+     whatever the icon's own width, and the icon sits on the title's cap
+     height rather than above it. */
+  .promises li > :global(svg) {
+    flex: 0 0 auto;
+    margin-top: 3px;
+    color: var(--text-faint);
+  }
+  .promises p {
+    margin: 2px 0 0;
   }
   .promises strong {
     display: flex;

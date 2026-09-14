@@ -76,11 +76,14 @@
     font-size: 1.05rem;
   }
   .btn[data-variant="primary"] {
-    background: var(--gray-950);
-    color: var(--gray-0);
+    /* Green means action. This was --gray-950 on --gray-0, layer-1 greys that
+       do not flip with the theme: on a dark ground the app's main button was a
+       near-black slab on near-black, the least visible thing on the screen. */
+    background: var(--brand);
+    color: var(--brand-contrast);
   }
   .btn[data-variant="primary"]:hover:not(:disabled) {
-    background: var(--gray-800);
+    background: var(--brand-strong);
   }
   .btn[data-variant="secondary"] {
     background: var(--surface-card);
