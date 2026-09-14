@@ -27,9 +27,19 @@
   */
   let route = $state(isSignInReturn() ? { name: "account", arg: "" } : parse(location.hash));
   function parse(hash) {
+    // Routes are `#/name`. A bare `#anchor` is a link into the page's own
+    // marketing copy, which shares this document, so it means home.
+    if (hash && !hash.startsWith("#/")) return { name: "home", arg: "" };
     const [name, arg] = hash.replace(/^#\/?/, "").split("/");
     return { name: name || "home", arg: arg ? decodeURIComponent(arg) : "" };
   }
+  // The marketing copy is one document with the app, so it has to know
+  // which screen is showing. Static in the HTML for a crawler, hidden by
+  // CSS once someone is past the front door.
+  $effect(() => {
+    document.body.dataset.route = route.name;
+  });
+
   function go(name, arg = "") {
     location.hash = arg ? `#/${name}/${encodeURIComponent(arg)}` : `#/${name}`;
   }
@@ -79,19 +89,42 @@
   */
   let picked = $state(null);
   const setPicked = (file) => (picked = file);
+
+  /*
+    Whether this app draws its own top bar.
+
+    Everywhere but one place, yes: the phone and desktop builds have no page
+    around them, and every app route on the web replaces the marketing copy.
+    The exception is the web's landing route, where the page's own header is
+    already at the top of the document and ours would be the second bar on it.
+  */
+  const showAppBar = $derived(isNative || route.name !== "home");
+
+  /*
+    Move a node into an element outside this component's tree.
+
+    Svelte has no portal, and the alternative — rendering the controls a second
+    time inside the site header — would be two sets of components bound to one
+    store, which drift the moment one of them is the one you click. Moving the
+    node keeps it a single instance with its listeners intact.
+  */
+  function portal(node, selector) {
+    const target = document.querySelector(selector);
+    if (target) target.append(node);
+    return {
+      destroy() {
+        node.remove();
+      },
+    };
+  }
 </script>
 
-<header class="topbar">
-  <button class="brand" onclick={() => go("home")}>
-    <span class="of">Open</span>PhotoId<span class="dot">.</span>
-  </button>
-
-  {#if route.name !== "home"}
-    <button class="linkish" onclick={() => go("home")} aria-label={$t("nav.back")}>
-      <Icon name="left" size={18} />
-    </button>
-  {/if}
-
+<!--
+  The account and language controls, defined once and rendered in one of two
+  places: this app's own top bar, or — on the web's landing route — the site
+  header that the page around us already draws.
+-->
+{#snippet appControls()}
   <!-- The account lives here and only here: a round, icon-only control, top
        right, reachable from every screen. It navigates to its own route
        rather than opening a panel in place. -->
@@ -113,8 +146,37 @@
         <option value={l.value}>{l.label}</option>
       {/each}
     </select>
+    <Icon name="down" size={14} />
   </label>
-</header>
+{/snippet}
+
+{#if showAppBar}
+  <header class="topbar">
+    <button class="brand" onclick={() => go("home")}>
+      <span class="of">Open</span>PhotoId<span class="dot">.</span>
+    </button>
+
+    {#if route.name !== "home"}
+      <button class="linkish" onclick={() => go("home")} aria-label={$t("nav.back")}>
+        <Icon name="left" size={18} />
+      </button>
+    {/if}
+
+    {@render appControls()}
+  </header>
+{:else}
+  <!--
+    The landing route on the web. The page already has a header at the top of
+    the document; drawing ours as well put a second bar — and a second
+    "OpenPhotoId." — half a screen below the first, so the page opened with a
+    headline and its navigation arrived after a scroll. Our two controls move
+    up into that header instead; `use:portal` reparents this node, so they are
+    the same live components with the same bindings, not a second copy.
+  -->
+  <div class="ported-controls" use:portal={"#app-controls-slot"}>
+    {@render appControls()}
+  </div>
+{/if}
 
 <main class="shell">
   {#if loadError}
@@ -152,28 +214,57 @@
     padding: var(--space-1);
     display: inline-flex;
   }
+  /* The account and language controls share one height with the header's
+     button beside them, so the row reads as one bar rather than three
+     components that disagree by a few pixels. */
   .account {
+    width: var(--control-h-md);
+    height: var(--control-h-md);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     border-radius: var(--radius-full, 999px);
   }
   .account:hover,
   .account.on {
     color: var(--text-strong);
-  }
-  .account.on {
     background: var(--surface-hover);
   }
   .lang {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    height: var(--control-h-md);
+    padding: 0 var(--space-2) 0 var(--space-3);
+    border: var(--border-width) solid var(--border-hairline);
+    border-radius: var(--radius-md);
     color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .lang:hover,
+  .lang:focus-within {
+    border-color: var(--border-strong);
+    color: var(--text-strong);
   }
   .lang select {
+    appearance: none;
+    -webkit-appearance: none;
     background: none;
     border: 0;
     color: inherit;
-    font-size: 0.85rem;
+    font: var(--type-ui);
     cursor: pointer;
-    padding: 4px 2px;
+    padding: 0;
+    height: 100%;
+    /* As wide as the chosen language, not the longest one in the list. */
+    field-sizing: content;
+    outline: none;
+  }
+  .lang select option {
+    color: var(--text-strong);
+    background: var(--surface-raised);
   }
 </style>
