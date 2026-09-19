@@ -1,14 +1,41 @@
 <script>
   import { t } from "$lib/i18n.js";
-  import { looksNative } from "$lib/platform.js";
+  import { isNative, looksNative } from "$lib/platform.js";
   import { readyOffline } from "$lib/models.js";
   import Button from "$ui/Button.svelte";
   import Icon from "$ui/Icon.svelte";
+  import Camera from "$ui/Camera.svelte";
 
   let { specs = [], go, setPicked } = $props();
 
   let fileInput;
   let cameraInput;
+  let camera;
+
+  /*
+    Which camera "Take a photo" opens. A phone gets the file input with
+    `capture`, which hands over to the system camera. A computer ignores
+    `capture` and would show the file picker instead (APP-97), so it gets the
+    webcam in the page. A fine pointer is the test for "computer": it is what
+    the device has, not what its screen is sized like. The phone apps keep the
+    system camera, and so does a page with no camera API at all (plain http).
+  */
+  const inPageCamera =
+    !isNative &&
+    typeof navigator !== "undefined" &&
+    !!navigator.mediaDevices?.getUserMedia &&
+    matchMedia("(pointer: fine)").matches;
+
+  function takePhoto() {
+    if (inPageCamera) camera.open();
+    else cameraInput.click();
+  }
+
+  function taken(file) {
+    setPicked(file);
+    go("pick");
+  }
+
   let offlineReady = $state(false);
   readyOffline().then((v) => (offlineReady = v));
 
@@ -38,7 +65,7 @@
     <Button size="lg" full icon="image" onclick={() => fileInput.click()}>
       {$t("home.start")}
     </Button>
-    <Button size="lg" full variant="secondary" icon="camera" onclick={() => cameraInput.click()}>
+    <Button size="lg" full variant="secondary" icon="camera" onclick={takePhoto}>
       {$t("home.camera")}
     </Button>
     <p class="tiny" style="text-align:center">
@@ -55,7 +82,8 @@
     onchange={choose}
   />
   <!-- `capture` asks a phone for the camera directly. Desktop browsers
-       ignore it and show the normal picker, which is the right fallback. -->
+       ignore it and show the normal picker, which is why a computer opens
+       <Camera> instead (see `takePhoto`); this input is the phone's path. -->
   <input
     bind:this={cameraInput}
     type="file"
@@ -64,6 +92,8 @@
     class="sr-only"
     onchange={choose}
   />
+
+  <Camera bind:this={camera} onphoto={taken} onfallback={() => fileInput.click()} />
 
   <ul class="promises">
     <li>
