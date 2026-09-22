@@ -62,7 +62,56 @@ export function matchLocale(tag) {
   return Object.keys(DICTS).find((k) => k.toLowerCase() === base) ?? null;
 }
 
+/**
+ * The language this page was published in, when it is one of a set.
+ *
+ * `/de.html` is a German page: its `<html lang>` says so, and that is what
+ * a crawler indexes under the hreflang ring. Only a page that names its
+ * translations counts -- the bare app shell declares `lang="en"` without
+ * meaning "English, not German", and must keep following the browser.
+ */
+export function pageLocale() {
+  if (typeof document === "undefined") return null;
+  if (!document.querySelector('link[rel="alternate"][hreflang]')) return null;
+  return matchLocale(document.documentElement.lang);
+}
+
+/** This page's translation into `code`, from its own hreflang ring. */
+export function localeHref(code) {
+  if (typeof document === "undefined") return null;
+  const link = document.querySelector(`link[rel="alternate"][hreflang="${CSS.escape(code)}"]`);
+  return link ? link.href : null;
+}
+
+/**
+ * The picker. On a translated page, choosing a language goes to that
+ * language's page rather than re-labelling this one: otherwise /de.html
+ * stays German to a crawler and turns English for the reader, and the
+ * address bar shares a page in the wrong language. The hrefs come from the
+ * page, so `.html` or clean URLs are whatever the site publishes.
+ */
+export function chooseLocale(code) {
+  if (!(code in DICTS)) return;
+  const href = localeHref(code);
+  if (href && href !== location.href.split("#")[0]) {
+    try {
+      localStorage.setItem(STORAGE_KEY, code);
+    } catch {
+      /* the URL carries the choice regardless */
+    }
+    location.assign(href + location.hash);
+    return;
+  }
+  lang.set(code);
+}
+
 function detect() {
+  // A translated page is the strongest signal there is: the reader is on
+  // /de.html because they, or a search result in their language, asked for
+  // German. A stored choice from another visit must not put an English app
+  // inside it, so this is read before storage, not after.
+  const published = pageLocale();
+  if (published) return published;
   // Private browsing throws on access, not just on write; the browser's
   // own preference is a good enough answer when it does.
   try {

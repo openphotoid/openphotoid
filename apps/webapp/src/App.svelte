@@ -1,5 +1,5 @@
 <script>
-  import { t, lang, LANGUAGES } from "$lib/i18n.js";
+  import { t, lang, LANGUAGES, chooseLocale } from "$lib/i18n.js";
   import { loadSpecs } from "$lib/pipeline.js";
   import Icon from "$ui/Icon.svelte";
   import Home from "./views/Home.svelte";
@@ -141,7 +141,7 @@
   <label class="lang">
     <Icon name="globe" size={15} />
     <span class="sr-only">Language</span>
-    <select bind:value={$lang}>
+    <select value={$lang} onchange={(e) => chooseLocale(e.currentTarget.value)}>
       {#each LANGUAGES as l (l.value)}
         <option value={l.value}>{l.label}</option>
       {/each}
