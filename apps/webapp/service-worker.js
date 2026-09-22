@@ -73,16 +73,35 @@ self.addEventListener("fetch", (event) => {
 
   // Navigations: network first, so a deployed update is picked up on the
   // next visit rather than after an unpredictable cache expiry — but fall
-  // back to the cached shell, which is what makes offline launch work.
+  // back to a cached copy, which is what makes offline launch work.
+  //
+  // Each page is cached under its own URL. With eight languages, /de.html
+  // and / are different documents; storing every navigation as
+  // ./index.html made the offline English home page whichever language
+  // was visited last. The key drops the query and fragment, which do not
+  // change the document. Offline, a page never visited falls back to the
+  // shell, since the app inside it runs the same either way.
+  //
+  // Only a good, same-origin answer is kept. A 404 or a proxy's error page
+  // cached here would be served as the page for as long as the device
+  // stays offline (openpixels, bba0ee2).
   if (request.mode === "navigate") {
+    const key = url.origin + url.pathname;
     event.respondWith(
       fetch(request)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put("./index.html", copy));
+          if (res.ok && res.type === "basic") {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(key, copy));
+          }
           return isolated(res);
         })
-        .catch(() => caches.match("./index.html").then((r) => (r ? isolated(r) : Response.error()))),
+        .catch(() =>
+          caches
+            .match(key)
+            .then((r) => r ?? caches.match("./index.html"))
+            .then((r) => (r ? isolated(r) : Response.error())),
+        ),
     );
     return;
   }
