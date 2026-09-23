@@ -48,7 +48,7 @@ credentials only the project owner should hold).
 - `crates/frame-engine` — ONNX inference (ort), model registry + checksummed download-on-first-run
 - `crates/frame-matting` — matting pipeline: MODNet (validated default), BiRefNet-lite (implemented, unverified on real hardware), guided-filter refinement + foreground-estimation de-fringing, IoU/MAE eval harness
 - `crates/frame-face` — YuNet face detection + 5-point landmarks
-- `crates/frame-compliance` — 20-document country spec dataset + auto-crop solver + 11-check validation report + padded background-extension crop
+- `crates/frame-compliance` — 21-document country spec dataset + auto-crop solver + 11-check validation report + padded background-extension crop
 - `crates/frame-sheet` — print-sheet layout (4x6/A4/5x7, cut marks), raster output
 - `crates/frame-batch` — parallel batch executor (shared model locks + rayon), per-item CSV report
 - `crates/frame-retouch` — optional finishing: capped skin smoothing (off by default), print sharpening, gradient/vignette/image backdrops, parametric formal wear
