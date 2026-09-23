@@ -32,8 +32,7 @@ background removal, which `rembg` made common property years ago. The
 product name says the job: "passport photo" is the highest-intent search
 term this category has, and it is what the page is for.
 
-The crates stay `frame-*`; everything user-facing is OpenPhotoId since the
-September 2026 rename (the page shipped as OpenPassport before that).
+The crates stay `frame-*`; everything user-facing is OpenPhotoId.
 
 ## How it is put together
 
