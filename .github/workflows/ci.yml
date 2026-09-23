@@ -45,13 +45,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: EmbarkStudios/cargo-deny-action@v2
-      # cargo-deny reads our dependencies' licences. This reads our own:
-      # GitHub reported `license: None` for months while the README and the
-      # site both said "MIT OR Apache-2.0" (APP-134), and with no file the
-      # legal default is all rights reserved — an open-source claim with
-      # nothing behind it.
-      - name: The repository's own licence files
-        run: |
+
+  licence:
+    # cargo-deny reads our dependencies' licences. This reads our own: GitHub
+    # reported `license: None` for months while the README and the site both
+    # said "MIT OR Apache-2.0" (APP-134), and with no file the legal default is
+    # all rights reserved — an open-source claim with nothing behind it.
+    #
+    # Its own job, not a step in `deny`: that job has been failing on a
+    # dependency advisory since 15 September, and a later step in a job that
+    # already failed never runs at all.
+    name: repository licence files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
           for f in LICENSE-MIT LICENSE-APACHE; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty, but the README and the site claim MIT OR Apache-2.0"; exit 1; }
           done
