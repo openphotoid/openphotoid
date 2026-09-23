@@ -2,7 +2,7 @@
 
 The end state for every product in this suite is a listing in the stores: an
 APK on Google Play and an IPA on the App Store, for iPhone and iPad. The web
-app at app.openphotoid.com is the first surface, not the destination.
+app at openphotoid.com is the first surface, not the destination.
 
 ## Where we are (8 September 2026, evening)
 

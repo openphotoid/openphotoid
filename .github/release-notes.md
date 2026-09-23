@@ -1,6 +1,6 @@
 Release candidate. Everything runs on your device; nothing is uploaded.
 
-**Web app** — no download needed: https://app.openphotoid.com
+**Web app** — no download needed: https://openphotoid.com
 
 **Android** — `OpenPhotoId-<version>.apk`. On the phone, open the file and allow installing from this source. Debug-signed until the Play listing exists; Play will offer the signed build.
 

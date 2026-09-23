@@ -1,8 +1,8 @@
 # OpenPhotoId
 
-**Use it now:** [app.openphotoid.com](https://app.openphotoid.com/) — the web
-app, on a phone, tablet or computer, nothing to install. Site and privacy
-policy at [openphotoid.com](https://openphotoid.com/). The
+**Use it now:** [openphotoid.com](https://openphotoid.com/) — the web app is
+the page, on a phone, tablet or computer, nothing to install
+(`app.openphotoid.com` redirects there). The
 [releases page](https://github.com/openphotoid/openphotoid/releases) carries
 the release candidate: macOS and Windows installers, the Android APK, and the
 iPhone/iPad build (unsigned until the App Store submission). The phone apps
@@ -28,8 +28,12 @@ sells by subscription — see [docs/premium-features.md](docs/premium-features.m
 for what each one does and, where it is less than the marketing elsewhere,
 why that is deliberate.
 
-**Status: pre-alpha, M0–M7 functionally complete, M8 partially done,
-M9–M11 added since.** See
+**Status: the web app is released and is what
+[openphotoid.com](https://openphotoid.com/) serves; the desktop and phone
+builds are release candidates on the
+[releases page](https://github.com/openphotoid/openphotoid/releases), unsigned
+until store submission.** Engineering progress: M0–M7 functionally complete,
+M8 partially done, M9–M11 added since. See
 [PLAN.md](PLAN.md) (milestones M0–M11, with per-milestone status) and
 [docs/research/](docs/research/) for the market, model-licensing, stack,
 and compliance research behind the plan — `05-m0-results.md` in
@@ -106,7 +110,8 @@ allowed (no BRIA RMBG, no insightface weights).
 
 ## License
 
-MIT OR Apache-2.0 (same as the openapps workspace). Third-party dependency
+Dual-licensed under either [MIT](LICENSE-MIT) or
+[Apache-2.0](LICENSE-APACHE), at your option. Third-party dependency
 licenses are in [THIRD-PARTY-LICENSES.html](THIRD-PARTY-LICENSES.html)
 (generated via `cargo about generate about.hbs -o THIRD-PARTY-LICENSES.html`
 — regenerate after any dependency change before cutting a release).
