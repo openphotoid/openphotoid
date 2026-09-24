@@ -55,7 +55,7 @@ jobs:
     # Its own job, not a step in `deny`: that job has been failing on a
     # dependency advisory since 15 September, and a later step in a job that
     # already failed never runs at all.
-    name: repository licence files
+    name: repository files and link text
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,6 +69,10 @@ jobs:
           done
           grep -q "MIT License" LICENSE-MIT || { echo "::error::LICENSE-MIT is not the MIT licence text"; exit 1; }
           grep -q "Apache License" LICENSE-APACHE || { echo "::error::LICENSE-APACHE is not the Apache licence text"; exit 1; }
+      # A link whose text is the address again tells a search engine nothing
+      # about where it goes, and the README's first line is the one that
+      # matters most (APP-134).
+      - run: python3 scripts/check-link-text.py
 
   test:
     name: test (${{ matrix.os }})
