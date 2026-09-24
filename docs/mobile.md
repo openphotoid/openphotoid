@@ -77,7 +77,7 @@ Steps 1–5 are done (8 September 2026); step 6 is prepared as far as it can be 
    (debug-signed until a submission is planned; the upload key can never
    be rotated) and the unsigned IPA on `v*` tags, attached to a prerelease.
    `v0.1.0-rc.1` is the first.
-6. **The store gates**, which need Darius: an Apple Developer account and
+6. **The store gates**, which need the maintainer: an Apple Developer account and
    a Play Console account for the openphotoid identity, the signing keys,
    the listing copy and screenshots (from step 4's captures, the same mark
    as the favicon), the privacy policy URL (`openphotoid.com/privacy.html`,
