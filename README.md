@@ -1,7 +1,8 @@
 # OpenPhotoId
 
-**Use it now:** [openphotoid.com](https://openphotoid.com/) — the web app is
-the page, on a phone, tablet or computer, nothing to install
+**Use it now:** [openphotoid.com — free passport and ID photo
+maker](https://openphotoid.com/) — the web app is the page, on a phone,
+tablet or computer, nothing to install
 (`app.openphotoid.com` redirects there). The
 [releases page](https://github.com/openphotoid/openphotoid/releases) carries
 the release candidate: macOS and Windows installers, the Android APK, and the
@@ -28,8 +29,8 @@ sells by subscription — see [docs/premium-features.md](docs/premium-features.m
 for what each one does and, where it is less than the marketing elsewhere,
 why that is deliberate.
 
-**Status: the web app is released and is what
-[openphotoid.com](https://openphotoid.com/) serves; the desktop and phone
+**Status: the [passport and ID photo maker at
+openphotoid.com](https://openphotoid.com/) is released; the desktop and phone
 builds are release candidates on the
 [releases page](https://github.com/openphotoid/openphotoid/releases), unsigned
 until store submission.** Engineering progress: M0–M7 functionally complete,
