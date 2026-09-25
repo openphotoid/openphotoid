@@ -1,5 +1,5 @@
 <script>
-  import { t, lang, LANGUAGES, chooseLocale } from "$lib/i18n.js";
+  import { t, lang, LANGUAGES, chooseLocale, pageHasTranslations } from "$lib/i18n.js";
   import { loadSpecs } from "$lib/pipeline.js";
   import Icon from "$ui/Icon.svelte";
   import Home from "./views/Home.svelte";
@@ -90,6 +90,12 @@
   let picked = $state(null);
   const setPicked = (file) => (picked = file);
 
+  // Installed to a home screen: no browser chrome, and the page around the
+  // app hides its own, so this is the app alone on the screen.
+  const standalone =
+    typeof matchMedia !== "undefined" &&
+    (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true);
+
   /*
     Whether this app draws its own top bar.
 
@@ -97,8 +103,28 @@
     around them, and every app route on the web replaces the marketing copy.
     The exception is the web's landing route, where the page's own header is
     already at the top of the document and ours would be the second bar on it.
+
+    Installed to a home screen is not that exception: the site's stylesheet
+    hides its whole chrome there, slot included, so the controls we hand it
+    would be hidden with it and the screen would have no account button and no
+    way to change language at all.
   */
-  const showAppBar = $derived(isNative || route.name !== "home");
+  const showAppBar = $derived(isNative || standalone || route.name !== "home");
+
+  /*
+    Who draws the language control.
+
+    On openphotoid.com the page draws one: a globe that switches language by
+    *navigating* -- to /de.html -- so the choice is shareable, crawlable, and
+    present on the privacy page too, none of which a select inside the app can
+    manage (APP-177). Two of them in one corner is one too many, so wherever
+    the page publishes a translation ring, the app leaves language to it.
+
+    Not everywhere, though: installed to a home screen the page's chrome is
+    hidden by its own stylesheet, and the phone apps have no page around them
+    at all. Both are the app alone on the screen, and it keeps its control.
+  */
+  const ownsLanguage = isNative || standalone || !pageHasTranslations();
 
   /*
     Move a node into an element outside this component's tree.
@@ -138,16 +164,18 @@
     <Icon name="user" size={18} />
   </button>
 
-  <label class="lang">
-    <Icon name="globe" size={15} />
-    <span class="sr-only">Language</span>
-    <select value={$lang} onchange={(e) => chooseLocale(e.currentTarget.value)}>
-      {#each LANGUAGES as l (l.value)}
-        <option value={l.value}>{l.label}</option>
-      {/each}
-    </select>
-    <Icon name="down" size={14} />
-  </label>
+  {#if ownsLanguage}
+    <label class="lang">
+      <Icon name="globe" size={15} />
+      <span class="sr-only">Language</span>
+      <select value={$lang} onchange={(e) => chooseLocale(e.currentTarget.value)}>
+        {#each LANGUAGES as l (l.value)}
+          <option value={l.value}>{l.label}</option>
+        {/each}
+      </select>
+      <Icon name="down" size={14} />
+    </label>
+  {/if}
 {/snippet}
 
 {#if showAppBar}

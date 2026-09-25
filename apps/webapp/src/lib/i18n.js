@@ -71,9 +71,21 @@ export function matchLocale(tag) {
  * meaning "English, not German", and must keep following the browser.
  */
 export function pageLocale() {
-  if (typeof document === "undefined") return null;
-  if (!document.querySelector('link[rel="alternate"][hreflang]')) return null;
+  if (!pageHasTranslations()) return null;
   return matchLocale(document.documentElement.lang);
+}
+
+/**
+ * Whether the page around the app publishes its own translations.
+ *
+ * The hreflang ring is what makes a page one of a set, and a page that has
+ * one also carries the site's own language control -- so it owns the choice,
+ * and the app draws no second one (see App.svelte). The bare shell has no
+ * ring, and neither does a phone app, which is why both keep theirs.
+ */
+export function pageHasTranslations() {
+  if (typeof document === "undefined") return false;
+  return !!document.querySelector('link[rel="alternate"][hreflang]');
 }
 
 /** This page's translation into `code`, from its own hreflang ring. */

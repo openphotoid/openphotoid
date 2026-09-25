@@ -17,6 +17,56 @@ export const FIXTURES = {
   noFace: "no-face-landscape.png",
 };
 
+/**
+ * Whether the served page publishes translations of itself.
+ *
+ * The composed site does (an hreflang ring, and a globe in its header); the
+ * app's bare shell does not. It decides which control switches language, and
+ * which surface a test is looking at.
+ */
+export const pageIsTranslated = (page) =>
+  page.evaluate(() => !!document.querySelector('link[rel="alternate"][hreflang]'));
+
+/**
+ * Switch to `tag` using whatever control this surface has: the page's own
+ * language links where the page owns language (APP-177), the app's select
+ * where the app is alone on the screen.
+ */
+export async function switchLanguage(page, tag) {
+  if (await pageIsTranslated(page)) {
+    // Switching language here is a navigation, and the route lives in the
+    // hash — so carry it across, or a test that was in the picker lands back
+    // on the home screen.
+    const hash = await page.evaluate(() => location.hash);
+    // The header's globe is a <details>, and its links are display:none until
+    // it is open. On any route but home the page's whole chrome is hidden --
+    // the app is working, not being sold to -- so there is nothing to click
+    // and the ring itself is the way across.
+    await page.evaluate(() => {
+      for (const d of document.querySelectorAll("details")) d.open = true;
+    });
+    const link = page.locator(`a[hreflang="${tag}"]`).first();
+    if (await link.isVisible()) {
+      await link.click();
+      await page.waitForLoadState("domcontentloaded");
+    } else {
+      const href = await page.evaluate(
+        (t) => document.querySelector(`link[rel="alternate"][hreflang="${t}"]`)?.href,
+        tag,
+      );
+      await page.goto(href + hash);
+      return;
+    }
+    if (hash && (await page.evaluate(() => location.hash)) !== hash) {
+      await page.evaluate((h) => {
+        location.hash = h;
+      }, hash);
+    }
+    return;
+  }
+  await page.locator("header select").selectOption(tag);
+}
+
 /** Home → choose a photo → the picker → one document → the studio. */
 export async function openPhoto(page, file, specId = "us-passport") {
   await page.goto("/");
