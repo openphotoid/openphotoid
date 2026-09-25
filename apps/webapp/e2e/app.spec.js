@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { FIXTURES, fixture, here, openPhoto, waitForResult, jpegSize } from "./helpers.mjs";
+import { FIXTURES, fixture, here, openPhoto, waitForResult, jpegSize, switchLanguage, pageIsTranslated } from "./helpers.mjs";
 
 const SPEC_COUNT = 21; // data/specs/*.json
 const CHECKS = [
@@ -34,7 +34,7 @@ test.describe("home", () => {
   // assertion using it is actually about.
   test("Simplified Chinese switches every string and survives a reload", async ({ page }) => {
     await page.goto("/");
-    await page.locator("header select").selectOption("zh-Hans");
+    await switchLanguage(page, "zh-Hans");
     await expect(page.locator("main :is(h1, h2.h1)")).toContainText(/[一-鿿]/);
     await expect(page.locator("main :is(h1, h2.h1)")).not.toContainText("Passport");
     await page.reload();
@@ -58,10 +58,14 @@ test.describe("home", () => {
   };
   test("every offered language renders, and <html lang> follows the picker", async ({ page }) => {
     await page.goto("/");
-    const offered = await page.locator("header select option").evaluateAll((os) => os.map((o) => o.value));
-    expect(offered.sort()).toEqual(Object.keys(TAGLINE).sort());
+    // Both controls offer the same eight; whichever this surface draws is the
+    // one the reader has.
+    const offered = await ((await pageIsTranslated(page))
+      ? page.locator("a[hreflang]:not([hreflang='x-default'])").evaluateAll((as) => as.map((a) => a.hreflang))
+      : page.locator("header select option").evaluateAll((os) => os.map((o) => o.value)));
+    expect([...new Set(offered)].sort()).toEqual(Object.keys(TAGLINE).sort());
     for (const [tag, tagline] of Object.entries(TAGLINE)) {
-      await page.locator("header select").selectOption(tag);
+      await switchLanguage(page, tag);
       await expect(page.locator("main :is(h1, h2.h1)")).toContainText(tagline);
       expect(await page.evaluate(() => document.documentElement.lang)).toBe(tag);
     }
@@ -69,10 +73,33 @@ test.describe("home", () => {
     await expect(page.locator("main :is(h1, h2.h1)")).toContainText(TAGLINE.pt);
   });
 
+  // The app's own select: gone where the page publishes a language control of
+  // its own, still there where the app is alone on the screen (APP-177).
+  test("only one language control is on screen", async ({ page }) => {
+    await page.goto("/");
+    const appSelect = page.locator("#app-controls-slot select, header .lang select");
+    if (await pageIsTranslated(page)) {
+      await expect(appSelect).toHaveCount(0);
+      // The page's own control: a globe that opens a menu of real links.
+      await expect(page.locator("header details.lang-switch summary")).toBeVisible();
+    } else {
+      await expect(appSelect).toHaveCount(1);
+    }
+  });
+
+  // `zh-TW` is not a catalogue: the widening has to land on Hant rather than
+  // the Hans that a bare prefix match would give. The browser is asked only
+  // where the page itself has not already answered — on a translated page the
+  // document's own language wins, which is the whole of 5.1 (APP-177).
   test("a Traditional Chinese browser is handed Hant, not Hans", async ({ browser }) => {
     const ctx = await browser.newContext({ locale: "zh-TW" });
     const page = await ctx.newPage();
     await page.goto("/");
+    if (await pageIsTranslated(page)) {
+      await expect(page.locator("main :is(h1, h2.h1)")).toContainText(TAGLINE.en);
+      expect(await page.evaluate(() => document.documentElement.lang)).toBe("en");
+      await page.goto("/zh-Hant.html");
+    }
     await expect(page.locator("main :is(h1, h2.h1)")).toContainText(TAGLINE["zh-Hant"]);
     expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-Hant");
     await ctx.close();
@@ -95,7 +122,7 @@ test.describe("picker and coverage", () => {
     await expect(rows).toHaveCount(1);
     await search.fill("zzzz");
     await expect(page.getByText(/Nothing matches/)).toBeVisible();
-    await page.locator("header select").selectOption("zh-Hans");
+    await switchLanguage(page, "zh-Hans");
     await search.fill("美国");
     await expect(rows).toHaveCount(us);
   });

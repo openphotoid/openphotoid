@@ -34,7 +34,17 @@ let base;
 test.beforeAll(async () => {
   const root = mkdtempSync(join(tmpdir(), "opid-locales-"));
   cpSync(DIST, root, { recursive: true, filter: (src) => !src.includes("/models") });
-  const shell = readFileSync(join(DIST, "index.html"), "utf8");
+  // The ring this spec publishes has to be the only one on these pages. When
+  // SITE_ROOT is the composed site, its index.html already carries the real
+  // one (and the site's own language links), so it is stripped first --
+  // otherwise "a page that names no translations" would name eight.
+  const shell = readFileSync(join(DIST, "index.html"), "utf8")
+    .replace(/<link[^>]*rel="alternate"[^>]*hreflang[^>]*>\s*/g, "")
+    .replace(/<details class="lang-switch">[\s\S]*?<\/details>\s*/g, "")
+    .replace(/<nav class="lang-row"[\s\S]*?<\/nav>\s*/g, "")
+    // …and not the site's stopgap, which writes its own language into the
+    // app's storage. A page that names no translations must not smuggle one in.
+    .replace(/<script>[\s\S]{0,600}?openphotoid\.lang[\s\S]*?<\/script>\s*/g, "");
   const port = 5199 + 20;
   const origin = `http://localhost:${port}`;
   const ring =
@@ -91,9 +101,17 @@ test("a page that names no translations still follows the browser", async ({ bro
   await ctx.close();
 });
 
+// Where the app still draws a picker, it navigates rather than relabelling.
+// On the site it draws none at all -- the page's globe does this, and two
+// controls in one corner is one too many (APP-177) -- so the surface asked
+// here is the installed app, which has the ring but none of the page's
+// chrome, and therefore keeps its own.
 test("the picker goes to the chosen language's page instead of relabelling this one", async ({ browser }) => {
   const ctx = await browser.newContext({ locale: "en-US", serviceWorkers: "block" });
   const page = await ctx.newPage();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "standalone", { value: true, configurable: true });
+  });
   await page.goto(`${base}/`);
   await expect(promise(page)).toHaveText("Free, all of it");
   await page.locator("label.lang select").first().selectOption("ja");
