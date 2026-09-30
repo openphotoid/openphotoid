@@ -259,6 +259,30 @@ pub fn adjust_crop_inner(
     )
 }
 
+/// The bytes the person saves, which have to be the bytes the checklist
+/// measured.
+///
+/// They were not. `file_size_check` reports the size of an encode aimed at
+/// the portal's window -- `encode_jpeg_within` searches for the highest
+/// quality that still fits -- while this encoded the picture at a flat
+/// quality 95 and saved that. For a Korean passport the two differ by half:
+/// 117 KB reported against 64 KB written, under the 100 KB floor the check
+/// had just called a pass, so the app said yes to a file the portal would
+/// refuse. Same window, same encoder, same bytes.
+///
+/// A spec with no maximum has no window to hit, and keeps the flat quality.
+fn encode_output(output: &Frame, spec: &PhotoSpec) -> Result<Vec<u8>, String> {
+    let window = spec
+        .digital
+        .as_ref()
+        .and_then(|d| d.max_kb.map(|max| (d.min_kb.unwrap_or(0), max)));
+    match window {
+        Some((min_kb, max_kb)) => frame_core::io::encode_jpeg_within(output, min_kb, max_kb),
+        None => frame_core::io::encode_jpeg(output, 95),
+    }
+    .map_err(|e| format!("encode error: {e}"))
+}
+
 /// Shared by [`process_photo_inner`] (auto default) and
 /// [`adjust_crop_inner`] (user-chosen point): solve the crop, apply it,
 /// re-detect the face on the *output* to independently confirm where it
@@ -280,8 +304,7 @@ fn finalize(
     let final_faces = detector.detect(&output).unwrap_or_default();
     let report = frame_compliance::validate(&output, &final_faces, spec);
 
-    let jpeg_bytes =
-        frame_core::io::encode_jpeg(&output, 95).map_err(|e| format!("encode error: {e}"))?;
+    let jpeg_bytes = encode_output(&output, spec)?;
     let output_jpeg_base64 = format!(
         "data:image/jpeg;base64,{}",
         base64::engine::general_purpose::STANDARD.encode(jpeg_bytes)
@@ -319,5 +342,83 @@ fn status_str(s: Status) -> &'static str {
         Status::Warn => "warn",
         Status::Fail => "fail",
         Status::NotChecked => "not_checked",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use frame_core::RgbaImage;
+
+    /// A picture with enough detail that JPEG quality actually moves its
+    /// size -- a flat fill encodes to the same few KB at every quality, which
+    /// would hide exactly the mismatch these assert on.
+    fn busy_frame(w: u32, h: u32) -> Frame {
+        let mut raw = Vec::with_capacity((w * h * 4) as usize);
+        for y in 0..h {
+            for x in 0..w {
+                let n = ((x * 7 + y * 13) % 256) as u8;
+                raw.extend_from_slice(&[n, n.wrapping_mul(3), n.wrapping_add(90), 255]);
+            }
+        }
+        Frame::new(RgbaImage::from_raw(w, h, raw).expect("a frame of the size asked for"))
+    }
+
+    fn spec(id: &str) -> PhotoSpec {
+        frame_compliance::spec::load_all()
+            .into_iter()
+            .find(|s| s.id == id)
+            .unwrap_or_else(|| panic!("no spec {id}"))
+    }
+
+    fn reported_kb(frame: &Frame, spec: &PhotoSpec) -> usize {
+        let report = frame_compliance::validate(frame, &[], spec);
+        let detail = &report
+            .checks
+            .iter()
+            .find(|c| c.name == "file_size")
+            .expect("a file_size check")
+            .detail;
+        detail
+            .split_whitespace()
+            .next()
+            .and_then(|n| n.parse().ok())
+            .unwrap_or_else(|| panic!("no KB figure in {detail:?}"))
+    }
+
+    /// The number on the checklist is the size of the file that gets saved.
+    ///
+    /// Reporting one encode and writing another is not a rounding error: on a
+    /// document with a floor it turns "passes" into a file the portal refuses.
+    #[test]
+    fn the_checklist_reports_the_file_that_will_be_saved() {
+        for id in ["south-korea-passport", "india-pan", "us-passport"] {
+            let spec = spec(id);
+            let d = spec.digital.as_ref().expect("a digital spec");
+            let frame = busy_frame(d.width_px.unwrap_or(600), d.height_px.unwrap_or(600));
+
+            let saved_kb = encode_output(&frame, &spec).expect("encode").len() / 1024;
+            assert_eq!(
+                saved_kb,
+                reported_kb(&frame, &spec),
+                "{id}: the checklist and the saved file disagree"
+            );
+        }
+    }
+
+    /// And the file it saves is inside the window the document allows.
+    #[test]
+    fn the_saved_file_lands_inside_the_documents_window() {
+        for id in ["south-korea-passport", "india-pan"] {
+            let spec = spec(id);
+            let d = spec.digital.as_ref().expect("a digital spec");
+            let frame = busy_frame(d.width_px.unwrap_or(600), d.height_px.unwrap_or(600));
+            let kb = encode_output(&frame, &spec).expect("encode").len() / 1024;
+
+            let min = d.min_kb.unwrap_or(0) as usize;
+            let max = d.max_kb.expect("a maximum") as usize;
+            assert!(kb >= min, "{id}: {kb} KB is under the {min} KB floor");
+            assert!(kb <= max, "{id}: {kb} KB is over the {max} KB cap");
+        }
     }
 }
