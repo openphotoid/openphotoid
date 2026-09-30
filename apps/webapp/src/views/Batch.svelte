@@ -148,7 +148,7 @@
         <option value="" disabled>{$t("picker.title")}</option>
         {#each filteredSpecs as s (s.id)}
           <option value={s.id}>
-            {countryName(s.country, $lang)} — {documentLabel(s)}
+            {countryName(s.country, $lang)} — {documentLabel(s, $t)}
           </option>
         {/each}
       </select>

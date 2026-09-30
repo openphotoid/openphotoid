@@ -2,7 +2,8 @@
   import { t, lang } from "$lib/i18n.js";
   import { settings, rememberSpec } from "$lib/settings.js";
   import { Photo, defaultOptions, loadModels } from "$lib/pipeline.js";
-  import { backgroundRgb, documentLabel, countryName, outputPx, sizeWindow } from "$lib/specs.js";
+  import { checkName, checkDetail } from "$lib/checks.js";
+  import { backgroundRgb, backgroundName, documentLabel, countryName, outputPx, sizeWindow } from "$lib/specs.js";
   import { save, readFile, objectUrl, filename } from "$lib/download.js";
   import Button from "$ui/Button.svelte";
   import Icon from "$ui/Icon.svelte";
@@ -264,10 +265,10 @@
   <div class="stack" style="padding-top:var(--space-5)">
     <header class="dochead">
       <div>
-        <h1>{documentLabel(spec)}</h1>
+        <h1>{documentLabel(spec, $t)}</h1>
         <p class="muted">
           {countryName(spec.country, $lang)} ·
-          {$t("picker.background", { name: spec.background.name })}
+          {$t("picker.background", { name: backgroundName(spec, $t) })}
         </p>
       </div>
       <Button size="sm" variant="ghost" onclick={() => go("pick")}>{$t("studio.changeDoc")}</Button>
@@ -276,7 +277,7 @@
     <!-- Preview -->
     <div class="preview">
       {#if resultUrl}
-        <img src={resultUrl} alt={$t("studio.after")} />
+        <img src={resultUrl} alt={$t("studio.after")} data-result />
       {:else if sourceUrl}
         <img src={sourceUrl} alt={$t("studio.before")} class="dim" />
       {:else}
@@ -329,7 +330,7 @@
         </header>
         <ul class="checks">
           {#each report.checks as c (c.name)}
-            <li data-status={c.status}>
+            <li data-status={c.status} data-check={c.name}>
               <Icon
                 name={c.status === "pass" ? "check" : c.status === "fail" ? "x" : "alert"}
                 size={15}
@@ -339,8 +340,8 @@
                     ? 'red'
                     : 'orange'})"
               />
-              <span class="cname">{c.name.replaceAll("_", " ")}</span>
-              <span class="cdetail tiny">{c.detail}</span>
+              <span class="cname">{checkName($t, c.name)}</span>
+              <span class="cdetail tiny">{checkDetail($t, c, spec, $lang)}</span>
             </li>
           {/each}
         </ul>
@@ -396,7 +397,7 @@
       <!-- Background -->
       <Panel title={$t("panel.background")} icon="palette" hint={$t("panel.background.hint")}>
         <p class="tiny">
-          {$t("panel.background.required", { name: spec.background.name })}
+          {$t("panel.background.required", { name: backgroundName(spec, $t) })}
         </p>
         <Choice
           value={backdropKind}

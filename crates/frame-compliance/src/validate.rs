@@ -34,7 +34,13 @@ pub enum Status {
 pub struct CheckResult {
     pub name: &'static str,
     pub status: Status,
+    /// The sentence, in English, for logs and the desktop build.
     pub detail: String,
+    /// The same figures, unformatted, so a front end can write the sentence
+    /// in the reader's language instead of showing this one. `detail` stays
+    /// the fallback: a front end that knows nothing of a check still has
+    /// something true to print.
+    pub values: Vec<(&'static str, f32)>,
 }
 
 #[derive(Debug, Clone)]
@@ -85,6 +91,7 @@ pub fn validate(output: &Frame, faces: &[Face], spec: &PhotoSpec) -> ValidationR
                 name,
                 status: Status::NotChecked,
                 detail: "no face detected".into(),
+                values: Vec::new(),
             });
         }
         checks.push(background_uniformity_check(output, None, spec));
@@ -113,16 +120,19 @@ fn face_count_check(faces: &[Face]) -> CheckResult {
             name: "face_count",
             status: Status::Fail,
             detail: "no face detected".into(),
+            values: Vec::new(),
         },
         1 => CheckResult {
             name: "face_count",
             status: Status::Pass,
             detail: "1 face".into(),
+            values: vec![("count", 1.0)],
         },
         n => CheckResult {
             name: "face_count",
             status: Status::Fail,
             detail: format!("{n} faces detected; exactly 1 required"),
+            values: vec![("count", n as f32)],
         },
     }
 }
@@ -150,6 +160,11 @@ fn head_height_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> CheckResu
             f.head_min_pct * 100.0,
             f.head_max_pct * 100.0
         ),
+        values: vec![
+            ("value", pct * 100.0),
+            ("min", f.head_min_pct * 100.0),
+            ("max", f.head_max_pct * 100.0),
+        ],
     }
 }
 
@@ -172,6 +187,11 @@ fn eye_line_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> CheckResult 
             f.eye_min_from_bottom_pct * 100.0,
             f.eye_max_from_bottom_pct * 100.0
         ),
+        values: vec![
+            ("value", pct_from_bottom * 100.0),
+            ("min", f.eye_min_from_bottom_pct * 100.0),
+            ("max", f.eye_max_from_bottom_pct * 100.0),
+        ],
     }
 }
 
@@ -190,6 +210,7 @@ fn centering_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> CheckResult
         name: "centering",
         status,
         detail: format!("{offset_pct:.1}% off-center (tolerance {tol:.0}%)"),
+        values: vec![("value", offset_pct), ("max", tol)],
     }
 }
 
@@ -207,6 +228,7 @@ fn roll_check(face: &Face, spec: &PhotoSpec) -> CheckResult {
         name: "roll",
         status,
         detail: format!("{roll:.1}° (max {max:.0}°)"),
+        values: vec![("value", roll), ("max", max)],
     }
 }
 
@@ -229,6 +251,7 @@ fn inter_eye_distance_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> Ch
     } else {
         ied
     };
+    let reachable_flag = if reachable >= IED_RECOMMENDED_PX { 1.0 } else { 0.0 };
     let (status, detail) = if ied < IED_MIN_PX {
         (Status::Fail, format!("{ied:.0}px (min {IED_MIN_PX:.0})"))
     } else if ied >= IED_RECOMMENDED_PX {
@@ -251,6 +274,12 @@ fn inter_eye_distance_check(output: &Frame, face: &Face, spec: &PhotoSpec) -> Ch
         name: "inter_eye_distance",
         status,
         detail,
+        values: vec![
+            ("value", ied),
+            ("min", IED_MIN_PX),
+            ("recommended", IED_RECOMMENDED_PX),
+            ("recommendation_reachable", reachable_flag),
+        ],
     }
 }
 
@@ -280,6 +309,7 @@ fn blur_check(output: &Frame, face: &Face) -> CheckResult {
             name: "blur",
             status: Status::NotChecked,
             detail: "face region too small to measure".into(),
+            values: Vec::new(),
         };
     }
 
@@ -309,6 +339,7 @@ fn blur_check(output: &Frame, face: &Face) -> CheckResult {
         name: "blur",
         status,
         detail: format!("Laplacian variance {variance:.0} (min {BLUR_VARIANCE_MIN:.0})"),
+        values: vec![("value", variance), ("min", BLUR_VARIANCE_MIN)],
     }
 }
 
@@ -328,6 +359,7 @@ fn lighting_symmetry_check(output: &Frame, face: &Face) -> CheckResult {
             name: "lighting_symmetry",
             status: Status::NotChecked,
             detail: "face region too small to split".into(),
+            values: Vec::new(),
         };
     }
 
@@ -358,6 +390,7 @@ fn lighting_symmetry_check(output: &Frame, face: &Face) -> CheckResult {
         name: "lighting_symmetry",
         status,
         detail: format!("{asymmetry_pct:.1}% left/right luminance difference"),
+        values: vec![("value", asymmetry_pct)],
     }
 }
 
@@ -429,6 +462,7 @@ fn background_uniformity_check(
             name: "background_uniformity",
             status: Status::NotChecked,
             detail: "no reliable background region above the head to sample".into(),
+            values: Vec::new(),
         };
     }
 
@@ -470,6 +504,7 @@ fn background_uniformity_check(
             "stddev {stddev:.1}, ΔE {delta_e:.1} vs {}",
             spec.background.hex_render
         ),
+        values: vec![("stddev", stddev), ("delta_e", delta_e)],
     }
 }
 
@@ -485,6 +520,12 @@ fn resolution_check(output: &Frame, spec: &PhotoSpec) -> CheckResult {
         name: "resolution",
         status,
         detail: format!("{got_w}x{got_h} (want {want_w}x{want_h})"),
+        values: vec![
+            ("got_w", got_w as f32),
+            ("got_h", got_h as f32),
+            ("want_w", want_w as f32),
+            ("want_h", want_h as f32),
+        ],
     }
 }
 
@@ -494,6 +535,7 @@ fn file_size_check(output: &Frame, spec: &PhotoSpec) -> CheckResult {
             name: "file_size",
             status: Status::NotChecked,
             detail: "spec has no digital file-size constraint".into(),
+            values: Vec::new(),
         };
     };
     let (Some(min_kb), Some(max_kb)) = (d.min_kb.or(Some(0)), d.max_kb) else {
@@ -501,6 +543,7 @@ fn file_size_check(output: &Frame, spec: &PhotoSpec) -> CheckResult {
             name: "file_size",
             status: Status::NotChecked,
             detail: "no max KB constraint to target".into(),
+            values: Vec::new(),
         };
     };
     match frame_core::io::encode_jpeg_within(output, min_kb, max_kb) {
@@ -508,11 +551,17 @@ fn file_size_check(output: &Frame, spec: &PhotoSpec) -> CheckResult {
             name: "file_size",
             status: Status::Pass,
             detail: format!("{} KB fits {min_kb}-{max_kb} KB", bytes.len() / 1024),
+            values: vec![
+                ("kb", (bytes.len() / 1024) as f32),
+                ("min_kb", min_kb as f32),
+                ("max_kb", max_kb as f32),
+            ],
         },
         Err(_) => CheckResult {
             name: "file_size",
             status: Status::Fail,
             detail: format!("cannot hit {min_kb}-{max_kb} KB window at any JPEG quality"),
+            values: vec![("min_kb", min_kb as f32), ("max_kb", max_kb as f32)],
         },
     }
 }
@@ -789,16 +838,19 @@ mod tests {
                     name: "a",
                     status: Status::Pass,
                     detail: "".into(),
+            values: Vec::new(),
                 },
                 CheckResult {
                     name: "b",
                     status: Status::NotChecked,
                     detail: "".into(),
+            values: Vec::new(),
                 },
                 CheckResult {
                     name: "c",
                     status: Status::Warn,
                     detail: "".into(),
+            values: Vec::new(),
                 },
             ],
         };

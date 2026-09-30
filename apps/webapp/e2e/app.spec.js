@@ -4,9 +4,11 @@ import { join } from "node:path";
 import { FIXTURES, fixture, here, openPhoto, waitForResult, jpegSize, switchLanguage, pageIsTranslated } from "./helpers.mjs";
 
 const SPEC_COUNT = 21; // data/specs/*.json
+// The ids the core reports, which are also what the CSV header carries.
+// The labels on screen are translated, so they are no way to name a check.
 const CHECKS = [
-  "face count", "head height", "eye line", "centering", "roll", "inter eye distance",
-  "blur", "lighting symmetry", "background uniformity", "resolution", "file size",
+  "face_count", "head_height", "eye_line", "centering", "roll", "inter_eye_distance",
+  "blur", "lighting_symmetry", "background_uniformity", "resolution", "file_size",
 ];
 
 test.describe("home", () => {
@@ -171,13 +173,13 @@ test.describe("the pipeline on real photos", () => {
 
     // A slider drag re-renders without a model run and changes the output.
     await page.locator('button.head:has-text("Position")').click();
-    const before = await page.locator('img[alt="Result"]').getAttribute("src");
+    const before = await page.locator('img[data-result]').getAttribute("src");
     const head = page.locator('input[type="range"]').first();
     await head.evaluate((el) => {
       el.value = el.max;
       el.dispatchEvent(new Event("input", { bubbles: true }));
     });
-    await expect(page.locator('img[alt="Result"]')).not.toHaveAttribute("src", before);
+    await expect(page.locator('img[data-result]')).not.toHaveAttribute("src", before);
     const after = await waitForResult(page);
     console.log(`slider re-render: render=${after.timings.render}ms validate=${after.timings.validate}ms`);
     // A slider move must feel live: the cheap half stays well under a second.
@@ -187,10 +189,10 @@ test.describe("the pipeline on real photos", () => {
     // not, once — the pill lit up and nothing else happened — which the
     // screenshot pass caught and this now guards.
     await page.locator('button.head:has-text("Formal clothes")').click();
-    const plain = await page.locator('img[alt="Result"]').getAttribute("src");
+    const plain = await page.locator('img[data-result]').getAttribute("src");
     await page.getByRole("radio", { name: "Jacket and tie" }).click();
     await expect(page.locator(".colors input[type=color]")).toHaveCount(3);
-    await expect(page.locator('img[alt="Result"]')).not.toHaveAttribute("src", plain);
+    await expect(page.locator('img[data-result]')).not.toHaveAttribute("src", plain);
     await page.getByRole("radio", { name: "Keep my clothes" }).click();
     await expect(page.locator(".colors input[type=color]")).toHaveCount(0);
 
@@ -206,9 +208,9 @@ test.describe("the pipeline on real photos", () => {
     // 21%. Everything else passes or warns. Encoded here so a threshold
     // change is a deliberate one.
     const expected = {
-      [FIXTURES.nasa[0]]: { overall: "Does not pass yet", failing: ["lighting symmetry"] },
+      [FIXTURES.nasa[0]]: { overall: "Does not pass yet", failing: ["lighting_symmetry"] },
       [FIXTURES.nasa[1]]: { overall: "Passes, with cautions", failing: [] },
-      [FIXTURES.nasa[2]]: { overall: "Does not pass yet", failing: ["lighting symmetry"] },
+      [FIXTURES.nasa[2]]: { overall: "Does not pass yet", failing: ["lighting_symmetry"] },
     };
     const verdicts = [];
     for (const file of FIXTURES.nasa) {
@@ -217,7 +219,7 @@ test.describe("the pipeline on real photos", () => {
       const failing = r.checks.filter((c) => c.status === "fail").map((c) => c.name);
       verdicts.push({ file, overall: r.overall, failing, notPassing: r.checks.filter((c) => c.status !== "pass"), timings: r.timings });
       expect(r.checks).toHaveLength(CHECKS.length);
-      expect(r.checks.find((c) => c.name === "face count").status, file).toBe("pass");
+      expect(r.checks.find((c) => c.name === "face_count").status, file).toBe("pass");
       if (r.provider === "cpu" && browserName === "chromium") {
         expect({ overall: r.overall, failing }, file).toEqual(expected[file]);
       } else {
@@ -226,8 +228,8 @@ test.describe("the pipeline on real photos", () => {
         // line, so the exact verdict is Chromium's CPU path's. Here: only
         // the lighting and background measures may fail, and the geometry
         // checks all pass.
-        expect(failing.filter((n) => n !== "lighting symmetry" && n !== "background uniformity"), file).toEqual([]);
-        for (const n of ["head height", "eye line", "centering", "roll", "resolution", "file size"]) {
+        expect(failing.filter((n) => n !== "lighting_symmetry" && n !== "background_uniformity"), file).toEqual([]);
+        for (const n of ["head_height", "eye_line", "centering", "roll", "resolution", "file_size"]) {
           expect(r.checks.find((c) => c.name === n).status, `${file} ${n}`).toBe("pass");
         }
       }
@@ -261,7 +263,7 @@ test.describe("the pipeline on real photos", () => {
     expect(csv).toHaveLength(4);
     const header = csv[0].split(",").map((s) => s.replaceAll('"', ""));
     expect(header.slice(0, 3)).toEqual(["file", "overall", "detail"]);
-    expect(header.slice(3)).toEqual(CHECKS.map((c) => c.replaceAll(" ", "_")));
+    expect(header.slice(3)).toEqual(CHECKS);
     // Same photos as the studio test, same verdicts, one row each. Exact on
     // the CPU path; on WebGPU the borderline lighting verdicts may flip.
     const provider = await page.evaluate(() => globalThis.__openphotoid?.provider);

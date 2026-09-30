@@ -7,6 +7,7 @@
     checks. Nothing to pick, nothing to type; the numbers on the test guide
     come from the same measures.
   */
+  import { checkName } from "$lib/checks.js";
   import { t } from "$lib/i18n.js";
   import { Photo, loadModels } from "$lib/pipeline.js";
   import Button from "$ui/Button.svelte";
@@ -126,7 +127,7 @@
       <ul class="checks">
         {#each result.checks as c (c.name)}
           <li data-status={c.status}>
-            <span class="cname">{c.name.replaceAll("_", " ")}</span>
+            <span class="cname">{checkName($t, c.name)}</span>
             <span class="cdetail tiny">{c.status} · {c.detail}</span>
           </li>
         {/each}

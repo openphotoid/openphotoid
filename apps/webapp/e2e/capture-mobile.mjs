@@ -30,7 +30,7 @@ for (const [tag, dev] of [["iphone", devices["iPhone 15"]], ["ipad", devices["iP
   await page.locator('input[type="search"]').fill("uk-passport");
   await page.locator("ul.list button").first().click();
   await page.locator("ul.checks li").first().waitFor({ timeout: 150_000 });
-  await page.locator('img[alt="Result"]').waitFor();
+  await page.locator('img[data-result]').waitFor();
   await page.waitForFunction(() => !document.querySelector(".veil"));
   await shoot("03-studio");
   await page.locator('button.head:has-text("Position")').click();

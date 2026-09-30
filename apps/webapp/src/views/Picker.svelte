@@ -55,7 +55,7 @@
         {#each recent as spec (spec.id)}
           <li>
             <button onclick={() => pick(spec)}>
-              <span class="name">{documentLabel(spec)}</span>
+              <span class="name">{documentLabel(spec, $t)}</span>
               <span class="meta mono">{sizeLine(spec)}</span>
               <Icon name="right" size={16} />
             </button>
@@ -73,7 +73,7 @@
           <li>
             <button onclick={() => pick(spec)}>
               <span class="name">
-                {documentLabel(spec)}
+                {documentLabel(spec, $t)}
                 <span
                   class="dot"
                   style="background:{spec.background.hex_render}"

@@ -28,7 +28,7 @@ async function toStudio(page, file, specId) {
   await page.locator('input[type="search"]').fill(specId);
   await page.locator("ul.list button").first().click();
   await page.locator("ul.checks li").first().waitFor({ timeout: 150_000 });
-  await page.locator('img[alt="Result"]').waitFor();
+  await page.locator('img[data-result]').waitFor();
   await page.waitForFunction(() => !document.querySelector(".veil"));
 }
 

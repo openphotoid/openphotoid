@@ -8,6 +8,8 @@
 
 const REGION = new Intl.DisplayNames(undefined, { type: "region" });
 
+import { hasKey } from "./i18n.js";
+
 /** "US" -> "United States", falling back to the code itself. */
 export function countryName(code, locale) {
   try {
@@ -22,11 +24,28 @@ export function countryName(code, locale) {
 }
 
 /** A short human label: "Passport", "Visa (DV lottery)" etc. */
-export function documentLabel(spec) {
-  return spec.document
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+/**
+ * What this document is called, in the reader's language.
+ *
+ * Title-casing the id gave "Id Card", "Oci", "Pan" and "Dv Lottery" -- wrong
+ * even in English, since those are initialisms -- and left every other
+ * language reading an English word. A few documents also need a name of their
+ * own: China has two id cards, 1-inch and 2-inch, and "Id Card" twice in one
+ * list tells nobody which to pick.
+ */
+export function documentLabel(spec, t) {
+  if (!t) return spec.document;
+  const own = `doc.${spec.id}`;
+  if (hasKey(own)) return t(own);
+  const generic = `doc.${spec.document}`;
+  return hasKey(generic) ? t(generic) : spec.document;
+}
+
+/** The background colour the document asks for, by name. */
+export function backgroundName(spec, t) {
+  const name = spec.background?.name ?? "white";
+  const key = `bg.${name}`;
+  return t && hasKey(key) ? t(key) : name.replaceAll("-", " ");
 }
 
 export function outputPx(spec) {

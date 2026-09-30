@@ -83,10 +83,12 @@ export async function openPhoto(page, file, specId = "us-passport") {
 /** Wait for the checklist, then return report state, timings and provider. */
 export async function waitForResult(page, timeout = 150_000) {
   await page.locator("ul.checks li").first().waitFor({ timeout });
-  await page.locator('img[alt="Result"]').waitFor({ timeout });
+  await page.locator('img[data-result]').waitFor({ timeout });
   return page.evaluate(() => {
     const checks = [...document.querySelectorAll("ul.checks li")].map((li) => ({
-      name: li.querySelector(".cname").textContent.trim(),
+      // The row carries the check's id; its label is translated.
+      name: li.dataset.check ?? li.querySelector(".cname").textContent.trim(),
+      label: li.querySelector(".cname").textContent.trim(),
       status: li.dataset.status,
       detail: li.querySelector(".cdetail").textContent.trim(),
     }));

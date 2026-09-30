@@ -213,6 +213,62 @@ export default {
 
   "common.close": "Close",
   "common.retry": "Try again",
+
+  // The eleven checks. `name` is what the core calls the check; the detail
+  // sentences are written here, from the figures it reports, so every
+  // language says them its own way.
+  "check.face_count": "Face count",
+  "check.face_count.detail": "1 face",
+  "check.face_count.detail.none": "no face found",
+  "check.face_count.detail.many": "{count} faces; exactly 1 required",
+  "check.head_height": "Head height",
+  "check.head_height.detail": "{value}% of the frame (band {min}\u2013{max}%)",
+  "check.eye_line": "Eye line",
+  "check.eye_line.detail": "{value}% from the bottom (band {min}\u2013{max}%)",
+  "check.centering": "Centring",
+  "check.centering.detail": "{value}% off centre (tolerance {max}%)",
+  "check.roll": "Head tilt",
+  "check.roll.detail": "{value}\u00b0 (max {max}\u00b0)",
+  "check.inter_eye_distance": "Distance between the eyes",
+  "check.inter_eye_distance.detail": "{value} px (min {min})",
+  "check.inter_eye_distance.detail.recommended": "{value} px (min {min}, {recommended} recommended)",
+  "check.inter_eye_distance.detail.later": "{value} px (min {min}; {recommended} is recommended at larger output sizes)",
+  "check.blur": "Sharpness",
+  "check.blur.detail": "detail measure {value} (min {min})",
+  "check.lighting_symmetry": "Even lighting",
+  "check.lighting_symmetry.detail": "{value}% difference between the left and right of the face",
+  "check.background_uniformity": "Background",
+  "check.background_uniformity.detail": "evenness {stddev}, colour difference {delta_e} from {hex}",
+  "check.resolution": "Size in pixels",
+  "check.resolution.detail": "{got_w}\u00d7{got_h} (wanted {want_w}\u00d7{want_h})",
+  "check.file_size": "File size",
+  "check.file_size.detail": "{kb} KB, inside the {min_kb}\u2013{max_kb} KB the portal allows",
+  "check.file_size.detail.impossible": "cannot reach {min_kb}\u2013{max_kb} KB at any quality",
+  // Nothing to measure: these carry no figure.
+  "check.detail.no_face": "no face found",
+  "check.detail.face_too_small": "the face is too small to measure",
+  "check.detail.face_too_narrow": "the face is too small to compare its two halves",
+  "check.detail.no_background_region": "no clear background above the head to sample",
+  "check.detail.no_digital_window": "this document sets no file-size limit",
+  "check.detail.no_max_kb": "this document sets no upper file size",
+
+  // Document names. Title-casing the id gave "Id Card", "Oci" and "Pan".
+  "doc.passport": "Passport",
+  "doc.id-card": "ID card",
+  "doc.visa-online": "Online visa",
+  "doc.oci": "OCI card",
+  "doc.pan": "PAN card",
+  "doc.dv-lottery": "DV Lottery",
+  // China issues two, and "ID card" twice in one list tells nobody which.
+  "doc.india-passport": "Passport, printed",
+  "doc.india-seva-digital": "Passport Seva, online",
+  "doc.china-1inch": "ID card, 1-inch",
+  "doc.china-2inch": "ID card, 2-inch",
+
+  // Background colours, as the documents name them.
+  "bg.white": "white",
+  "bg.light-grey": "light grey",
+
   "common.free": "Free",
   "common.loading": "Loading…",
   "common.downloading": "Downloading the one-time setup, {pct}%",

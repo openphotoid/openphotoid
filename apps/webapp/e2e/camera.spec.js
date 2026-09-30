@@ -111,7 +111,7 @@ test.describe("on a computer with a webcam", () => {
     await page.locator("ul.list button").first().click();
     await page.waitForURL(/#\/studio\/us-passport/);
     const r = await waitForResult(page);
-    const face = r.checks.find((c) => c.name.toLowerCase() === "face count");
+    const face = r.checks.find((c) => c.name === "face_count");
     expect(face?.status, JSON.stringify(r.checks)).toBe("pass");
   });
 });

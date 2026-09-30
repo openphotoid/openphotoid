@@ -31,7 +31,7 @@
               <td>
                 <span class="name">
                   <span class="dot" style="background:{spec.background.hex_render}"></span>
-                  {documentLabel(spec)}
+                  {documentLabel(spec, $t)}
                 </span>
                 {#if spec.sources?.length}
                   <a href={spec.sources[0]} target="_blank" rel="noreferrer noopener" class="tiny">

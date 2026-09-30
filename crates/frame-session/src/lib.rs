@@ -231,7 +231,11 @@ impl GarmentOption {
 pub struct CheckDto {
     pub name: String,
     pub status: String,
+    /// The English sentence, and the figures it was built from. A front end
+    /// with a translation for this check writes its own sentence from
+    /// `values`; one without still has `detail` to show.
     pub detail: String,
+    pub values: std::collections::BTreeMap<String, f32>,
 }
 
 #[derive(Debug, Serialize)]
@@ -662,6 +666,11 @@ impl Session {
                     name: c.name.to_string(),
                     status: status_str(c.status).to_string(),
                     detail: c.detail.clone(),
+                    values: c
+                        .values
+                        .iter()
+                        .map(|(k, v)| ((*k).to_string(), *v))
+                        .collect(),
                 })
                 .collect(),
         };

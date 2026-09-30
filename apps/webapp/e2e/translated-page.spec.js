@@ -13,6 +13,7 @@
 // These run only against the composed site; the app's bare shell publishes no
 // translations and keeps its own control, which app.spec.js covers.
 import { test, expect } from "@playwright/test";
+import { fixture, FIXTURES, waitForResult } from "./helpers.mjs";
 
 const GERMAN = "Pass- und Ausweisfotos";
 const ENGLISH = "Passport and ID photos";
@@ -68,6 +69,41 @@ test.describe("the app inside a translated page", () => {
     await page.locator('header details.lang-switch a[hreflang="de"]').click();
     await page.waitForURL(/\/de\.html$/);
     await expect(page.locator("#app")).toContainText("Foto aufnehmen");
+  });
+
+
+  // The eleven checks are the product's main claim, and a German reader met
+  // them in English -- with "Laplacian variance" in one of them. The names,
+  // the sentences, the document and the background colour all come from the
+  // catalogue now; only the figures come from the core.
+  test("the checklist, the document and the colour are all in the page's language", async ({ page }) => {
+    await translatedSiteOrSkip(page);
+    await page.goto("/de.html");
+    await page.locator('input[type="file"]').first().setInputFiles(fixture(FIXTURES.obama));
+    await page.waitForURL(/#\/pick/);
+    await page.locator('input[type="search"]').fill("us-passport");
+    await page.locator("ul.list button").first().click();
+    await page.waitForURL(/#\/studio\/us-passport/);
+
+    // The document and the colour it asks for, above the photo.
+    await expect(page.locator("#app h1")).toHaveText("Reisepass");
+    await expect(page.locator("#app")).toContainText("weiß");
+
+    const r = await waitForResult(page);
+    expect(r.checks).toHaveLength(11);
+    const labels = r.checks.map((c) => c.label).join(" | ");
+    expect(labels).toContain("Kopfhöhe");
+    expect(labels).toContain("Augenabstand");
+    expect(labels).toContain("Dateigröße");
+    for (const english of ["Head height", "File size", "Inter eye distance", "inter_eye_distance"]) {
+      expect(labels, `${english} is still on screen`).not.toContain(english);
+    }
+    // The sentences too, figures aside -- and no jargon from the core.
+    const details = r.checks.map((c) => c.detail).join(" | ");
+    expect(details).toContain("Bereich");
+    expect(details, "the core's English leaked through").not.toContain("Laplacian");
+    expect(details).not.toContain("band");
+    expect(details).not.toContain("off-center");
   });
 
   // 5.2. Every navigation used to be cached as "./index.html", so the offline

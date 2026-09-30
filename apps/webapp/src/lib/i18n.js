@@ -83,6 +83,15 @@ export function pageLocale() {
  * and the app draws no second one (see App.svelte). The bare shell has no
  * ring, and neither does a phone app, which is why both keep theirs.
  */
+/**
+ * Whether a key exists at all.
+ *
+ * English is the source every catalogue is checked against, so its keys are
+ * the vocabulary. Callers use this to tell "no translation yet" from "this
+ * text has no key", and to fall back to something true either way.
+ */
+export const hasKey = (key) => key in en;
+
 export function pageHasTranslations() {
   if (typeof document === "undefined") return false;
   return !!document.querySelector('link[rel="alternate"][hreflang]');
