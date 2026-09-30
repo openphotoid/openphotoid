@@ -80,10 +80,20 @@
     }
   }
 
-  function saveAll() {
-    results.forEach((r, i) => {
-      if (r.bytes) save(r.bytes, filename(spec.id, "jpg", i), "image/jpeg");
-    });
+  /*
+    One at a time, and stop when the person stops.
+
+    A browser takes twenty downloads at once without blinking. The phone apps
+    cannot: each save opens the system's file picker, so firing them together
+    stacks twenty pickers on top of each other, and `save` resolving false --
+    the picker dismissed -- means the person is done saving, not that this one
+    file failed.
+  */
+  async function saveAll() {
+    for (const [i, r] of results.entries()) {
+      if (!r.bytes) continue;
+      if (!(await save(r.bytes, filename(spec.id, "jpg", i), "image/jpeg"))) return;
+    }
   }
 
   /**

@@ -24,6 +24,10 @@ log "Bundling the app"
 # picker with a gap in its catalogue would otherwise fall back to English
 # silently, and nothing at runtime would say so.
 (cd "$WEBAPP_DIR" && node scripts/check-i18n.mjs)
+# The Save buttons reach the system from both paths. The phone apps are this
+# same build inside a WebView, which drops an `<a download>` on the floor, so
+# the native path cannot be checked by the browser suite.
+(cd "$WEBAPP_DIR" && node scripts/check-native-save.mjs)
 (cd "$WEBAPP_DIR" && npx vite build)
 
 [ -f "$DIST/index.html" ] || { echo "build.sh: vite produced no index.html" >&2; exit 1; }

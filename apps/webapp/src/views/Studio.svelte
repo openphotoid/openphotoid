@@ -200,22 +200,27 @@
     setTimeout(() => (saved = ""), 1800);
   }
 
+  /*
+    "Saved" waits for the save. In a browser `save` resolves as soon as the
+    download starts, but inside the phone apps it opens the system's file
+    picker and resolves false when the person backs out of it -- so flashing
+    before it returns would tell them the photo was saved when they had just
+    decided not to.
+  */
   async function saveDigital() {
     const win = sizeWindow(spec);
     const bytes = win
       ? await photo.outputJpegWithin(win.min ?? 0, win.max ?? 10_000)
       : await photo.outputJpeg(95);
-    save(bytes, filename(spec.id, "jpg"), "image/jpeg");
-    flash("digital");
+    if (await save(bytes, filename(spec.id, "jpg"), "image/jpeg")) flash("digital");
   }
   async function savePng() {
-    save(await photo.outputPng(), filename(spec.id, "png"), "image/png");
-    flash("png");
+    if (await save(await photo.outputPng(), filename(spec.id, "png"), "image/png")) flash("png");
   }
   async function saveSheet() {
     const dpi = spec.print?.dpi_default ?? 300;
-    save(await photo.sheetJpeg(sheet, dpi, true, 95), `${spec.id}-sheet-${sheet}.jpg`, "image/jpeg");
-    flash("sheet");
+    const bytes = await photo.sheetJpeg(sheet, dpi, true, 95);
+    if (await save(bytes, `${spec.id}-sheet-${sheet}.jpg`, "image/jpeg")) flash("sheet");
   }
 
   const digitalHint = $derived.by(() => {
